@@ -584,12 +584,15 @@ const TOOLS = [
 الأسلوب المطلوب: ${f.tone}
 اللهجة: ${f.lang}
 
-اكتب الكابشن أولاً، ثم اترك سطراً فارغاً، ثم أضف 6 هاشتاقات مناسبة بالعربية.
+اكتب الكابشن أولاً، ثم اترك سطراً فارغاً، ثم أضف 6 هاشتاقات بالضبط على هذا الشكل الحرفي (كل هاشتاق بسطر منفصل، يبدأ برمز # متبوعاً بكلمة عربية واحدة فقط):
+#كلمة1
+#كلمة2
+#كلمة3
+#كلمة4
+#كلمة5
+#كلمة6
 
-تعليمات صارمة لصياغة الهاشتاقات:
-- كل هاشتاق يجب أن يبدأ برمز # متبوعاً مباشرة بكلمة واحدة فقط، أو عبارة قصيرة مفصولة بشرطة سفلية (_) بين الكلمات، وليس بدمج الكلمات ببعضها بدون فواصل. مثال صحيح: #تركيا أو #رحلة_العمر. مثال خاطئ ممنوع: #تركياتشعلالروح أو رحلةإلىالماضي بدون رمز # أصلاً.
-- كل هاشتاق يجب أن يبدأ برمز # - لا تكتب أي كلمة في قائمة الهاشتاقات بدون الرمز #.
-- ضع كل هاشتاق في سطر منفصل أو مفصولاً بمسافة واضحة عن الهاشتاق التالي.`
+لا تكتب الهاشتاقات بأي شكل آخر غير هذا، ولا تدمج عدة كلمات بدون رمز # في أولها.`
   },
   {
     id: "email",
@@ -823,20 +826,14 @@ async function runTool() {
     // إزالة أي سؤال ختامي متبقٍ في آخر النص (نمط شائع لأسئلة المتابعة من النموذج)
     text = text.trim().replace(/[^.!؟?\n]*(هل|تريد|ترغب|تحب)[^.!؟?\n]*؟\s*$/u, '').trim();
 
-    // إصلاح هاشتاقات بدون رمز # - يفحص الجزء الأخير من النص (قسم الهاشتاقات المتوقع)
-    {
-      const lines = text.split('\n');
-      const totalLines = lines.length;
-      text = lines.map((line, idx) => {
-        const trimmed = line.trim();
-        if (!trimmed) return line;
-        // فقط بالنصف الثاني من النص (حيث تكون الهاشتاقات عادة) وسطر قصير بدون مسافات وبدون #
-        const isInLatterHalf = idx >= totalLines / 2;
-        const isShortNoSpaceArabic = /^[\u0600-\u06FF_]{2,30}$/.test(trimmed) && !trimmed.includes('#');
-        if (isInLatterHalf && isShortNoSpaceArabic) return '#' + trimmed;
-        return line;
-      }).join('\n');
-    }
+    // إصلاح هاشتاقات بدون رمز # - يفحص كل الأسطر القصيرة بغض النظر عن الموقع
+    text = text.split('\n').map(line => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.includes('#')) return line;
+      const isShortArabicWord = /^[\u0600-\u06FF_]{2,30}$/.test(trimmed);
+      if (isShortArabicWord) return '#' + trimmed;
+      return line;
+    }).join('\n');
 
     document.getElementById('resultText').textContent = text;
     document.getElementById('resultBox').classList.add('visible');
