@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ذكاء | أدوات الذكاء الاصطناعي بالعربي</title>
+<meta name="description" content="أدوات ذكاء اصطناعي مجانية باللغة العربية - كتابة، تحرير، إبداع، أعمال">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #fafaf8;
+    --accent: #2563eb;
+    --accent2: #7c3aed;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card: #ffffff;
+    --success: #059669;
+    --radius: 16px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,250,248,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+  }
+
+  .nav-badge {
+    font-size: 11px;
+    background: #dcfce7;
+    color: var(--success);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 72px 24px 48px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    background: #eff6ff;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 6vw, 52px);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 400;
+  }
+
+  /* TOOLS GRID */
+  .tools-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .tool-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px; height: 60px;
+    border-radius: 0 var(--radius) 0 60px;
+    opacity: 0.08;
+    transition: opacity 0.2s;
+  }
+
+  .tool-card:hover {
+    border-color: transparent;
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+
+  .tool-card:hover::before { opacity: 0.15; }
+
+  .tool-card[data-color="blue"]::before { background: var(--accent); }
+  .tool-card[data-color="purple"]::before { background: var(--accent2); }
+  .tool-card[data-color="green"]::before { background: var(--success); }
+  .tool-card[data-color="orange"]::before { background: #ea580c; }
+  .tool-card[data-color="rose"]::before { background: #e11d48; }
+  .tool-card[data-color="teal"]::before { background: #0d9488; }
+
+  .tool-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .tool-name {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .tool-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .tool-tag {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .tool-card[data-color="blue"] .tool-tag { background: #eff6ff; color: var(--accent); }
+  .tool-card[data-color="purple"] .tool-tag { background: #f5f3ff; color: var(--accent2); }
+  .tool-card[data-color="green"] .tool-tag { background: #f0fdf4; color: var(--success); }
+  .tool-card[data-color="orange"] .tool-tag { background: #fff7ed; color: #ea580c; }
+  .tool-card[data-color="rose"] .tool-tag { background: #fff1f2; color: #e11d48; }
+  .tool-card[data-color="teal"] .tool-tag { background: #f0fdfa; color: #0d9488; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    animation: slideUp 0.25s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-header {
+    padding: 24px 24px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-title-group { flex: 1; }
+
+  .modal-icon { font-size: 32px; margin-bottom: 8px; display: block; }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .modal-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .close-btn {
+    background: #f3f4f6;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+
+  .close-btn:hover { background: #e5e7eb; color: var(--ink); }
+
+  .modal-body { padding: 20px 24px 24px; }
+
+  /* FIELDS */
+  .field-group { margin-bottom: 16px; }
+
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+    color: var(--ink);
+  }
+
+  textarea, input[type="text"], select {
+    width: 100%;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--ink);
+    background: var(--paper);
+    resize: vertical;
+    transition: border-color 0.15s;
+    direction: rtl;
+    outline: none;
+  }
+
+  textarea:focus, input:focus, select:focus {
+    border-color: var(--accent);
+    background: #fff;
+  }
+
+  textarea { min-height: 100px; }
+
+  /* RUN BTN */
+  .run-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+    margin-top: 4px;
+  }
+
+  .run-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+  .run-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* RESULT */
+  .result-box {
+    margin-top: 16px;
+    background: #f8fafc;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    min-height: 80px;
+    font-size: 14px;
+    line-height: 1.8;
+    font-family: 'Tajawal', sans-serif;
+    white-space: pre-wrap;
+    color: var(--ink);
+    display: none;
+  }
+
+  .result-box.visible { display: block; }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .result-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--success);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .copy-btn:hover { background: var(--ink); color: white; border-color: var(--ink); }
+
+  .loading-dots {
+    display: none;
+    gap: 5px;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .loading-dots.visible { display: flex; }
+
+  .dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+    background: white;
+  }
+
+  .stat { text-align: center; }
+
+  .stat-num {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-num span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label { font-size: 12px; color: var(--muted); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 13px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .hero { padding: 48px 16px 32px; }
+    .tools-section { padding: 0 16px 60px; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .stats-bar { gap: 20px; }
+    .stat-num { font-size: 22px; }
+    nav { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">ذكاء ✦</div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button onclick="localStorage.removeItem('thakaa_api_key');alert('تم حذف المفتاح');" style="background:none;border:1px solid #e5e7eb;border-radius:8px;padding:4px 12px;font-family:Cairo,sans-serif;font-size:12px;cursor:pointer;color:#6b7280;">تغيير المفتاح</button>
+    <span class="nav-badge">مجاني 100%</span>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">✦ مدعوم بالذكاء الاصطناعي</div>
+  <h1>أدوات <span>ذكية</span><br>تكتب عنك بالعربي</h1>
+  <p>ست أدوات احترافية تعمل بالذكاء الاصطناعي — مجانية، سريعة، وتفهم العربية.</p>
+</section>
+
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num"><span>6</span></div>
+    <div class="stat-label">أداة متاحة</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num"><span>0</span></div>
+    <div class="stat-label">تسجيل مطلوب</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num"><span>∞</span></div>
+    <div class="stat-label">استخدام مجاني</div>
+  </div>
+</div>
+
+<section class="tools-section">
+  <div class="section-label">اختر أداة وابدأ</div>
+  <div class="tools-grid" id="toolsGrid"></div>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <span class="modal-icon" id="modalIcon"></span>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-subtitle" id="modalSubtitle"></div>
+      </div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="apiKeyBox" style="display:none;background:#fffbeb;border:1.5px solid #fbbf24;border-radius:12px;padding:14px;margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#92400e;">🔑 أدخل مفتاح Groq API</div>
+        <input type="password" id="apiKeyInput" placeholder="gsk_..." style="width:100%;font-family:Cairo,sans-serif;font-size:13px;border:1.5px solid #fbbf24;border-radius:8px;padding:10px 12px;background:white;direction:ltr;text-align:left;">
+        <div style="font-size:11px;color:#92400e;margin-top:6px;">احصل عليه مجاناً من console.groq.com · لن يُحفظ أو يُرسل لأي مكان</div>
+      </div>
+      <div id="modalFields"></div>
+      <button class="run-btn" id="runBtn" onclick="runTool()">
+        ✦ توليد الآن
+      </button>
+      <div class="loading-dots" id="loading">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="result-box" id="resultBox">
+        <div class="result-header">
+          <span class="result-label">✓ تم التوليد</span>
+          <button class="copy-btn" onclick="copyResult()">نسخ</button>
+        </div>
+        <div id="resultText"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  صُنع بـ ❤ · جميع الأدوات مجانية · مدعوم بـ Claude AI
+</footer>
+
+<script>
+const TOOLS = [
+  {
+    id: "cv",
+    icon: "📄",
+    name: "محسّن السيرة الذاتية",
+    desc: "حوّل معلوماتك البسيطة إلى سيرة ذاتية احترافية جاهزة للتقديم",
+    tag: "أعمال",
+    color: "blue",
+    fields: [
+      { id: "job", label: "المسمى الوظيفي المستهدف", type: "text", placeholder: "مثال: مهندس برمجيات" },
+      { id: "exp", label: "خبراتك ومهاراتك (باختصار)", type: "textarea", placeholder: "اكتب ما تعرفه وما عملت به..." },
+      { id: "edu", label: "مؤهلك التعليمي", type: "text", placeholder: "مثال: بكالوريوس حاسب آلي" }
+    ],
+    prompt: (f) => `أنت خبير في كتابة السير الذاتية الاحترافية. اكتب سيرة ذاتية احترافية باللغة العربية للشخص التالي:
+المسمى الوظيفي: ${f.job}
+الخبرات والمهارات: ${f.exp}
+المؤهل التعليمي: ${f.edu}
+
+اكتب السيرة الذاتية بشكل احترافي ومنظم يشمل: الملخص الشخصي، المهارات، الخبرات، والتعليم. اجعلها جذابة لأصحاب العمل.`
+  },
+  {
+    id: "caption",
+    icon: "📱",
+    name: "كاتب كابشن انستقرام",
+    desc: "كابشنات جذابة ومؤثرة لمنشوراتك مع هاشتاقات مناسبة",
+    tag: "سوشيال ميديا",
+    color: "rose",
+    fields: [
+      { id: "topic", label: "موضوع المنشور", type: "text", placeholder: "مثال: صورة من رحلة إلى تركيا" },
+      { id: "tone", label: "الأسلوب المطلوب", type: "select", options: ["ودّي وخفيف", "احترافي وجدي", "ملهم وتحفيزي", "مضحك وفكاهي"] },
+      { id: "lang", label: "لهجة الكتابة", type: "select", options: ["فصحى", "خليجي", "مصري", "شامي"] }
+    ],
+    prompt: (f) => `اكتب كابشن انستقرام احترافي وجذاب لمنشور عن: ${f.topic}
+الأسلوب المطلوب: ${f.tone}
+اللهجة: ${f.lang}
+
+اكتب الكابشن ثم أضف 10 هاشتاقات مناسبة. اجعله مؤثراً ويشجع التفاعل.`
+  },
+  {
+    id: "email",
+    icon: "✉️",
+    name: "مولّد الرسائل الرسمية",
+    desc: "رسائل إيميل رسمية واحترافية لأي موقف في ثوانٍ",
+    tag: "أعمال",
+    color: "purple",
+    fields: [
+      { id: "purpose", label: "الغرض من الرسالة", type: "text", placeholder: "مثال: طلب إجازة من المدير" },
+      { id: "sender", label: "اسم المُرسِل ومنصبه", type: "text", placeholder: "مثال: أحمد محمد - موظف مبيعات" },
+      { id: "receiver", label: "المُرسَل إليه", type: "text", placeholder: "مثال: مدير الموارد البشرية" }
+    ],
+    prompt: (f) => `اكتب رسالة إيميل رسمية احترافية باللغة العربية الفصحى:
+الغرض: ${f.purpose}
+المُرسِل: ${f.sender}
+المُرسَل إليه: ${f.receiver}
+
+اكتب رسالة كاملة تشمل: الموضوع، التحية، المضمون، والخاتمة. استخدم أسلوباً رسمياً راقياً.`
+  },
+  {
+    id: "whatsapp",
+    icon: "💬",
+    name: "ردود واتساب ذكية",
+    desc: "ردود مناسبة لأي موقف محرج أو حساس في واتساب",
+    tag: "تواصل",
+    color: "green",
+    fields: [
+      { id: "situation", label: "الموقف أو الرسالة المستلمة", type: "textarea", placeholder: "اشرح الموقف أو الصق الرسالة اللي وصلتك..." },
+      { id: "goal", label: "ما تريد تحقيقه من الرد", type: "text", placeholder: "مثال: الاعتذار باحترافية، الرفض بلطف، الطلب بأدب" }
+    ],
+    prompt: (f) => `ساعدني في كتابة رد واتساب مناسب للموقف التالي:
+الموقف: ${f.situation}
+ما أريد تحقيقه: ${f.goal}
+
+اكتب 3 ردود مختلفة (قصير، متوسط، مطوّل) مناسبة للموقف. اجعلها طبيعية وبشرية وليست رسمية جداً.`
+  },
+  {
+    id: "summary",
+    icon: "📝",
+    name: "ملخّص النصوص",
+    desc: "لخّص أي نص طويل إلى نقاط واضحة وسريعة القراءة",
+    tag: "إنتاجية",
+    color: "orange",
+    fields: [
+      { id: "text", label: "النص المراد تلخيصه", type: "textarea", placeholder: "الصق النص هنا..." },
+      { id: "length", label: "طول الملخص", type: "select", options: ["3 نقاط رئيسية", "ملخص فقرة واحدة", "ملخص تفصيلي"] }
+    ],
+    prompt: (f) => `لخّص النص التالي باللغة العربية:
+النص: ${f.text}
+طول الملخص المطلوب: ${f.length}
+
+اجعل الملخص واضحاً ومفيداً ويحتوي على أهم الأفكار.`
+  },
+  {
+    id: "idea",
+    icon: "💡",
+    name: "مولّد الأفكار الإبداعية",
+    desc: "أفكار إبداعية لمشاريعك، محتواك، أو حل مشاكلك",
+    tag: "إبداع",
+    color: "teal",
+    fields: [
+      { id: "challenge", label: "ما التحدي أو الموضوع؟", type: "textarea", placeholder: "مثال: أريد بدء مشروع صغير بميزانية محدودة" },
+      { id: "count", label: "عدد الأفكار", type: "select", options: ["5 أفكار", "10 أفكار", "15 فكرة"] }
+    ],
+    prompt: (f) => `أعطني أفكاراً إبداعية وعملية للتحدي التالي:
+${f.challenge}
+العدد المطلوب: ${f.count}
+
+لكل فكرة: اذكر الفكرة باختصار، ثم شرح موجز (سطرين)، ثم خطوة أولى للتنفيذ. رتّبها من الأسهل للأصعب.`
+  }
+];
+
+let currentTool = null;
+
+// Render tools
+const grid = document.getElementById('toolsGrid');
+TOOLS.forEach(tool => {
+  const card = document.createElement('div');
+  card.className = 'tool-card';
+  card.setAttribute('data-color', tool.color);
+  card.onclick = () => openTool(tool);
+  card.innerHTML = `
+    <span class="tool-icon">${tool.icon}</span>
+    <div class="tool-name">${tool.name}</div>
+    <div class="tool-desc">${tool.desc}</div>
+    <span class="tool-tag">${tool.tag}</span>
+  `;
+  grid.appendChild(card);
+});
+
+function openTool(tool) {
+  currentTool = tool;
+  document.getElementById('modalIcon').textContent = tool.icon;
+  document.getElementById('modalTitle').textContent = tool.name;
+  document.getElementById('modalSubtitle').textContent = tool.desc;
+
+  const fieldsEl = document.getElementById('modalFields');
+  fieldsEl.innerHTML = '';
+
+  tool.fields.forEach(field => {
+    const group = document.createElement('div');
+    group.className = 'field-group';
+
+    let inputHtml = '';
+    if (field.type === 'textarea') {
+      inputHtml = `<textarea id="field_${field.id}" placeholder="${field.placeholder || ''}"></textarea>`;
+    } else if (field.type === 'select') {
+      inputHtml = `<select id="field_${field.id}">${field.options.map(o => `<option>${o}</option>`).join('')}</select>`;
+    } else {
+      inputHtml = `<input type="text" id="field_${field.id}" placeholder="${field.placeholder || ''}">`;
+    }
+
+    group.innerHTML = `<label class="field-label">${field.label}</label>${inputHtml}`;
+    fieldsEl.appendChild(group);
+  });
+
+  document.getElementById('resultBox').classList.remove('visible');
+  document.getElementById('loading').classList.remove('visible');
+  document.getElementById('runBtn').disabled = false;
+  document.getElementById('apiKeyBox').style.display = 'block';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  currentTool = null;
+}
+
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+async function runTool() {
+  if (!currentTool) return;
+
+  const fieldValues = {};
+  let hasEmpty = false;
+
+  currentTool.fields.forEach(field => {
+    const el = document.getElementById(`field_${field.id}`);
+    const val = el ? el.value.trim() : '';
+    fieldValues[field.id] = val;
+    if (!val && field.type !== 'select') hasEmpty = true;
+  });
+
+  if (hasEmpty) {
+    alert('يرجى ملء جميع الحقول');
+    return;
+  }
+
+  const prompt = currentTool.prompt(fieldValues);
+
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('loading').classList.add('visible');
+  document.getElementById('resultBox').classList.remove('visible');
+
+  const apiKey = document.getElementById('apiKeyInput').value.trim();
+  if (!apiKey) {
+    document.getElementById('apiKeyBox').style.display = 'block';
+    document.getElementById('apiKeyInput').focus();
+    document.getElementById('runBtn').disabled = false;
+    document.getElementById('loading').classList.remove('visible');
+    return;
+  }
+
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + apiKey
+      },
+      body: JSON.stringify({
+        model: "qwen/qwen3-32b",
+        temperature: 0.6,
+        reasoning_effort: "none",
+        messages: [
+          { role: "system", content: "أنت مساعد كتابة عربي محترف. اكتب فقط باللغة العربية الفصحى السليمة 100%. ممنوع منعاً باتاً استخدام أي حروف أو كلمات من لغات أخرى (إنجليزية، صينية، تايلاندية، هندية، أو أي لغة غير العربية) إلا في حالة الأسماء الأجنبية الصريحة أو المصطلحات التقنية التي لا بديل عربي شائع لها. راجع إجابتك قبل إرسالها للتأكد من خلوها التام من أي خلط لغوي أو حروف غريبة." },
+          { role: "user", content: prompt }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    let text = data.choices?.[0]?.message?.content || (data.error ? 'خطأ: ' + data.error.message : 'حدث خطأ، يرجى المحاولة مجدداً.');
+
+    // الإبقاء فقط على: عربي، لاتيني، أرقام، مسافات، أسطر جديدة، وعلامات ترقيم شائعة
+    text = text.replace(/[^\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFFa-zA-Z0-9\s.,،؛:!؟?\-()'"@\/%+]/g, '');
+    // تنظيف أي مسافات مكررة ناتجة عن الحذف
+    text = text.replace(/[ \t]{2,}/g, ' ');
+
+    document.getElementById('resultText').textContent = text;
+    document.getElementById('resultBox').classList.add('visible');
+  } catch (err) {
+    document.getElementById('resultText').textContent = 'حدث خطأ في الاتصال. يرجى المحاولة مجدداً.';
+    document.getElementById('resultBox').classList.add('visible');
+  }
+
+  document.getElementById('loading').classList.remove('visible');
+  document.getElementById('runBtn').disabled = false;
+}
+
+function copyResult() {
+  const text = document.getElementById('resultText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✓ تم النسخ';
+    setTimeout(() => btn.textContent = 'نسخ', 2000);
+  });
+}
+</script>
+</body>
+</html>
