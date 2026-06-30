@@ -805,6 +805,13 @@ async function runTool() {
       return !placeholderPatterns.some(p => p.test(trimmed));
     }).join('\n');
 
+    // فحص إضافي على مستوى الجملة لالتقاط حالات ملتصقة بنهاية نص آخر بنفس السطر
+    text = text.split(/(?<=[.!؟?])\s+/).filter(sentence => {
+      const trimmed = sentence.trim();
+      if (!trimmed) return true;
+      return !placeholderPatterns.some(p => p.test(trimmed));
+    }).join(' ');
+
     // تنظيف الأسطر الفارغة المتكررة الناتجة عن الحذف، ثم المسافات المكررة
     text = text.replace(/\n{3,}/g, '\n\n').replace(/[ \t]{2,}/g, ' ').trim();
 
