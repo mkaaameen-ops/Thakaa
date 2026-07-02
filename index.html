@@ -391,6 +391,34 @@
 
   .copy-btn:hover { background: var(--ink); color: white; border-color: var(--ink); }
 
+  /* EXPORT BUTTONS */
+  .export-row {
+    display: none;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .export-row.visible { display: flex; }
+  .export-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  [dir="rtl"] .export-btn { font-family: 'Cairo', sans-serif; }
+  [dir="ltr"] .export-btn { font-family: 'Inter', sans-serif; }
+  .export-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .export-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-pdf { background: #fee2e2; color: #dc2626; }
+  .btn-docx { background: #dbeafe; color: #1d4ed8; }
+
   .loading-dots { display: none; gap: 5px; justify-content: center; padding: 20px; }
   .loading-dots.visible { display: flex; }
 
@@ -488,6 +516,10 @@
           <button class="copy-btn" id="copyBtn" onclick="copyResult()">نسخ</button>
         </div>
         <div id="resultText"></div>
+        <div class="export-row" id="exportRow">
+          <button class="export-btn btn-pdf" id="exportPdf" onclick="exportPDF()">📄 PDF</button>
+          <button class="export-btn btn-docx" id="exportDocx" onclick="exportDOCX()">📝 Word</button>
+        </div>
       </div>
     </div>
   </div>
@@ -515,6 +547,8 @@ const T = {
     emptyAlert: 'يرجى ملء جميع الحقول',
     errorConn: 'حدث خطأ في الاتصال. يرجى المحاولة مجدداً.',
     errorGeneric: 'حدث خطأ، يرجى المحاولة مجدداً.',
+    exportingPdf: '⏳ جارٍ التصدير...',
+    exportingDocx: '⏳ جارٍ التصدير...',
     systemPrompt: 'أنت كاتب عربي محترف متمكن من اللغة العربية الفصحى بشكل كامل. اكتب الرد بالكامل باللغة العربية الفصحى فقط، بدون أي استثناء. القاعدة الصارمة: ممنوع نهائياً كتابة أي كلمة واحدة بالإنجليزية أو أي لغة أخرى وسط الجملة العربية - استخدم دائماً المقابل العربي الصحيح. استخدم علامات الترقيم العربية (، ؛ ؟) وليس الإنجليزية. قواعد إضافية حاسمة: (1) استخدم فقط المعلومات المُعطاة فعلياً من المستخدم، وممنوع تماماً اختراع أي معلومة غير مذكورة - إذا كانت معلومة غير متوفرة، احذف الجزء المرتبط بها كلياً. (2) ممنوع منعاً باتاً كتابة أي عبارة توجيهية للقارئ مثل "اكتب هنا" أو "يرجى إدخال". (3) لا تضف أي سؤال أو تعليق تفاعلي بعد انتهاء المحتوى.'
   },
   en: {
@@ -532,6 +566,8 @@ const T = {
     emptyAlert: 'Please fill in all required fields.',
     errorConn: 'Connection error. Please try again.',
     errorGeneric: 'Something went wrong. Please try again.',
+    exportingPdf: '⏳ Exporting...',
+    exportingDocx: '⏳ Exporting...',
     systemPrompt: 'You are a professional English writing assistant. Write all responses in clear, natural, fluent English only. Never mix in words from other languages. Use standard English punctuation. Rules: (1) Use only information actually provided by the user — never invent names, dates, companies, or any details not given. If information is missing, omit that part entirely. (2) Never write any instructional placeholder text like "Enter your name", "[Company Name]", or similar. Write only complete, final sentences. (3) Do not add any trailing question, tip, or interactive comment after the content is complete.'
   }
 };
@@ -554,7 +590,31 @@ const TOOLS_DATA = {
         { id: "phone", label: "رقم الهاتف (اختياري)", type: "text", placeholder: "مثال: 0555555555", optional: true },
         { id: "email", label: "البريد الإلكتروني (اختياري)", type: "text", placeholder: "مثال: name@email.com", optional: true }
       ],
-      prompt: (f) => `أنت خبير في كتابة السير الذاتية الاحترافية. اكتب سيرة ذاتية احترافية باللغة العربية الفصحى للشخص التالي:\nالاسم الكامل: ${f.name}\nالمسمى الوظيفي المستهدف: ${f.job}\nالخبرات والمهارات: ${f.exp}\nالمؤهل التعليمي: ${f.edu}\nرقم الهاتف: ${f.phone || "(لم يُذكر)"}\nالبريد الإلكتروني: ${f.email || "(لم يُذكر)"}\n\nتعليمات: استخدم البيانات المُعطاة فعلياً فقط. إذا كان رقم الهاتف أو البريد "(لم يُذكر)"، احذف السطر كاملاً. ممنوع اختراع شركات أو تواريخ أو جامعات غير مذكورة. ممنوع كتابة أي placeholder. لا تضف أسئلة أو تعليقات بعد الانتهاء.`
+      prompt: (f) => `أنت خبير في كتابة السير الذاتية المحسّنة لنظام تتبع المتقدمين ATS. اكتب سيرة ذاتية احترافية ومتوافقة مع ATS باللغة العربية الفصحى للشخص التالي:
+
+الاسم الكامل: ${f.name}
+المسمى الوظيفي المستهدف: ${f.job}
+الخبرات والمهارات: ${f.exp}
+المؤهل التعليمي: ${f.edu}
+رقم الهاتف: ${f.phone || "(لم يُذكر)"}
+البريد الإلكتروني: ${f.email || "(لم يُذكر)"}
+
+تعليمات ATS الصارمة:
+- استخدم هذا التنسيق بالضبط مع نفس العناوين حرفاً بحرف (لأن أنظمة ATS تبحث عن عناوين محددة):
+
+== بيانات التواصل ==
+== الملخص المهني ==
+== المهارات الأساسية ==
+== الخبرات العملية ==
+== التعليم ==
+
+- في قسم المهارات، ضع كل مهارة في سطر منفصل تبدأ بـ "•"
+- في قسم الخبرات، إذا ذُكرت خبرات، رتّبها من الأحدث للأقدم. إذا لم تُذكر خبرات محددة، اكتب ملخصاً لمهارات الشخص كخبرة مهنية عامة.
+- استخدم أفعال قوية تبدأ بها كل نقطة إنجاز (طوّر، نفّذ، أدار، حسّن، صمّم...)
+- ممنوع اختراع شركات أو تواريخ أو جامعات لم تُذكر — استخدم المعطيات فقط
+- إذا كان الهاتف أو البريد "(لم يُذكر)"، احذف السطر كاملاً
+- ممنوع أي placeholder أو أسئلة أو تعليقات بعد الانتهاء
+- لا تستخدم جداول أو صور أو أعمدة متعددة — نص خطي فقط لتوافق ATS`
     },
     {
       id: "caption", icon: "📱",
@@ -631,7 +691,31 @@ const TOOLS_DATA = {
         { id: "phone", label: "Phone Number (optional)", type: "text", placeholder: "e.g. +1 555 0123", optional: true },
         { id: "email", label: "Email Address (optional)", type: "text", placeholder: "e.g. name@email.com", optional: true }
       ],
-      prompt: (f) => `Write a professional resume in English.\nFull Name: ${f.name}\nTarget Job: ${f.job}\nExperience & Skills: ${f.exp}\nEducation: ${f.edu}\nPhone: ${f.phone || "(not provided)"}\nEmail: ${f.email || "(not provided)"}\n\nRules: Use only the info provided. If phone/email is "(not provided)" omit that line entirely. Never invent company names, dates, or universities not mentioned. Never write placeholder text. Do not add questions or comments after the resume ends.`
+      prompt: (f) => `You are an expert ATS-optimized resume writer. Write a professional resume in English that passes Applicant Tracking Systems (ATS) for:
+
+Full Name: ${f.name}
+Target Job Title: ${f.job}
+Experience & Skills: ${f.exp}
+Education: ${f.edu}
+Phone: ${f.phone || "(not provided)"}
+Email: ${f.email || "(not provided)"}
+
+Strict ATS formatting rules:
+- Use EXACTLY these section headers (ATS systems scan for these):
+
+== CONTACT INFORMATION ==
+== PROFESSIONAL SUMMARY ==
+== CORE SKILLS ==
+== WORK EXPERIENCE ==
+== EDUCATION ==
+
+- In CORE SKILLS: list each skill on its own line starting with "•"
+- In WORK EXPERIENCE: use strong action verbs to start each bullet point (Developed, Led, Implemented, Improved, Designed...)
+- If no specific work experience is provided, write a skills-based professional summary section instead
+- Never invent company names, job titles, dates, or university names not mentioned — use only what was provided
+- If phone/email is "(not provided)", omit that line entirely from contact section
+- Use plain linear text only — no tables, columns, graphics, or special characters that ATS cannot parse
+- Never write placeholder text or trailing questions/comments`
     },
     {
       id: "caption", icon: "📱",
@@ -894,6 +978,14 @@ async function runTool() {
 
     document.getElementById('resultText').textContent = text;
     document.getElementById('resultBox').classList.add('visible');
+
+    // Show export buttons only for CV tool
+    const exportRow = document.getElementById('exportRow');
+    if (currentTool && currentTool.id === 'cv') {
+      exportRow.classList.add('visible');
+    } else {
+      exportRow.classList.remove('visible');
+    }
   } catch (err) {
     document.getElementById('resultText').textContent = t.errorConn;
     document.getElementById('resultBox').classList.add('visible');
