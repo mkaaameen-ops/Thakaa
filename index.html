@@ -1009,6 +1009,25 @@ function copyResult() {
 }
 
 // ============================================================
+// EXPORT HELPERS — detect headings/bullets regardless of AI formatting
+// ============================================================
+function isHeadingLine(t) {
+  if (t.startsWith('==') && t.endsWith('==')) return true;
+  if (t.startsWith('#')) return true;
+  const keywords = ['بيانات التواصل','الملخص المهني','المهارات الأساسية','المهارات','الخبرات العملية','الخبرات','التعليم','الدورات','الشهادات','اللغات','المراجع','CONTACT','SUMMARY','SKILLS','EXPERIENCE','EDUCATION','LANGUAGES','REFERENCES','CERTIFICATIONS'];
+  return keywords.some(k => t.toUpperCase().includes(k.toUpperCase())) && t.length < 50 && !t.includes('،') && !t.includes(',');
+}
+function isBulletLine(t) {
+  return /^[•\-\*]\s/.test(t);
+}
+function cleanHead(t) {
+  return t.replace(/^==\s*/,'').replace(/\s*==$/,'').replace(/^#+\s*/,'').trim();
+}
+function cleanBull(t) {
+  return t.replace(/^[•\-\*]\s*/,'').trim();
+}
+
+// ============================================================
 // EXPORT — PDF (print dialog — zero dependencies, instant)
 // ============================================================
 function exportPDF() {
@@ -1017,28 +1036,54 @@ function exportPDF() {
 
   const isAr = currentLang === 'ar';
   const name = document.getElementById('field_name')?.value?.trim() || 'resume';
-  const fontFamily = isAr ? "'Arial', 'Tahoma', sans-serif" : "'Arial', sans-serif";
+  const dir = isAr ? 'rtl' : 'ltr';
+  const al  = isAr ? 'right' : 'left';
+  const ff  = isAr ? "'Tahoma','Arial Unicode MS','Arial',sans-serif" : "'Arial',sans-serif";
 
-  const rows = text.split('\n').map(line => {
-    const t2 = line.trim();
-    if (!t2) return '<div style="height:6pt"></div>';
-    if (t2.startsWith('==') && t2.endsWith('==')) {
-      const h = t2.replace(/==/g,'').trim();
-      return `<div style="font-size:12pt;font-weight:bold;color:#1d4ed8;border-bottom:1.5pt solid #1d4ed8;margin-top:12pt;margin-bottom:4pt;padding-bottom:2pt">${h}</div>`;
-    }
-    if (t2.startsWith('•')) {
-      return `<div style="margin-${isAr?'right':'left'}:14pt;margin-bottom:2pt">• ${t2.slice(1).trim()}</div>`;
-    }
-    return `<div style="margin-bottom:2pt">${t2}</div>`;
-  }).join('');
+  const lines = text.split('\n');
+  let firstContent = true;
+  let rows = '';
 
-  const html = `<!DOCTYPE html><html lang="${isAr?'ar':'en'}" dir="${isAr?'rtl':'ltr'}">
+  lines.forEach(line => {
+    const t = line.trim();
+    if (!t) { rows += `<div style="height:5pt"></div>`; return; }
+
+    if (firstContent) {
+      firstContent = false;
+      rows += `<div style="font-size:18pt;font-weight:bold;color:#1e3a8a;margin-bottom:6pt;font-family:${ff}">${t}</div>`;
+      return;
+    }
+    if (isHeadingLine(t)) {
+      rows += `<div style="font-size:12pt;font-weight:bold;color:#1d4ed8;border-bottom:2pt solid #1d4ed8;margin-top:13pt;margin-bottom:5pt;padding-bottom:2pt;font-family:${ff}">${cleanHead(t)}</div>`;
+      return;
+    }
+    if (isBulletLine(t)) {
+      rows += `<div style="padding-${al}:14pt;margin-bottom:3pt;font-size:10.5pt;font-family:${ff}">• ${cleanBull(t)}</div>`;
+      return;
+    }
+    rows += `<div style="font-size:10.5pt;margin-bottom:3pt;font-family:${ff}">${t}</div>`;
+  });
+
+  const html = `<!DOCTYPE html><html lang="${isAr?'ar':'en'}" dir="${dir}">
 <head><meta charset="UTF-8"><title>${name}</title>
-<style>@page{margin:18mm 20mm;size:A4}body{font-family:${fontFamily};font-size:11pt;color:#1a1a1a;line-height:1.5;direction:${isAr?'rtl':'ltr'};text-align:${isAr?'right':'left'}}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style>
+<style>
+@page{margin:16mm 18mm;size:A4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:${ff};font-size:10.5pt;color:#1a1a1a;line-height:1.55;direction:${dir};text-align:${al};-webkit-print-color-adjust:exact;print-color-adjust:exact}
+a{color:#1d4ed8}
+</style>
 </head><body>${rows}</body></html>`;
 
   const win = window.open('', '_blank');
-  if (!win) { alert(currentLang==='ar'?'فعّل النوافذ المنبثقة في المتصفح':'Allow popups in your browser'); return; }
+  if (!win) {
+    const iframe = window.document.createElement('iframe');
+    iframe.style.cssText = 'position:fixed;width:0;height:0;border:0;visibility:hidden';
+    window.document.body.appendChild(iframe);
+    iframe.contentDocument.write(html);
+    iframe.contentDocument.close();
+    setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => window.document.body.removeChild(iframe), 2000); }, 500);
+    return;
+  }
   win.document.write(html);
   win.document.close();
   setTimeout(() => win.print(), 500);
@@ -1064,29 +1109,32 @@ async function exportDOCX() {
   const bidi = isAr ? '<w:bidi/>' : '';
   let bodyXml = '';
 
+  let firstContent = true;
   text.split('\n').forEach(line => {
     const t2 = line.trim();
     if (!t2) {
-      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="80"/></w:pPr></w:p>`;
+      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="60"/></w:pPr></w:p>`;
       return;
     }
-    if (t2.startsWith('==') && t2.endsWith('==')) {
-      const h = esc(t2.replace(/==/g,'').trim());
-      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:before="240" w:after="80"/><w:pBdr><w:bottom w:val="single" w:sz="8" w:space="1" w:color="1d4ed8"/></w:pBdr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1d4ed8"/><w:sz w:val="24"/></w:rPr><w:t>${h}</w:t></w:r></w:p>`;
+    if (firstContent) {
+      firstContent = false;
+      const c = esc(t2);
+      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="120"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1e3a8a"/><w:sz w:val="40"/></w:rPr><w:t>${c}</w:t></w:r></w:p>`;
       return;
     }
-    if (t2.startsWith('•')) {
-      const c = esc(t2.slice(1).trim());
-      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="40"/><w:ind w:${isAr?'right':'left'}="360"/></w:pPr><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t xml:space="preserve">• ${c}</w:t></w:r></w:p>`;
+    if (isHeadingLine(t2)) {
+      const h = esc(cleanHead(t2));
+      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:before="280" w:after="80"/><w:pBdr><w:bottom w:val="single" w:sz="8" w:space="1" w:color="1d4ed8"/></w:pBdr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1d4ed8"/><w:sz w:val="24"/></w:rPr><w:t>${h}</w:t></w:r></w:p>`;
       return;
     }
-    const isName = bodyXml === '';
+    if (isBulletLine(t2)) {
+      const c = esc(cleanBull(t2));
+      const ind = isAr ? `w:right="360"` : `w:left="360"`;
+      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="50"/><w:ind ${ind}/></w:pPr><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t xml:space="preserve">• ${c}</w:t></w:r></w:p>`;
+      return;
+    }
     const c = esc(t2);
-    if (isName) {
-      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="80"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1e40af"/><w:sz w:val="36"/></w:rPr><w:t>${c}</w:t></w:r></w:p>`;
-    } else {
-      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="40"/></w:pPr><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t>${c}</w:t></w:r></w:p>`;
-    }
+    bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="50"/></w:pPr><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t>${c}</w:t></w:r></w:p>`;
   });
 
   const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${bodyXml}<w:sectPr><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr></w:body></w:document>`;
