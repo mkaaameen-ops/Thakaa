@@ -1009,6 +1009,121 @@ function copyResult() {
 }
 
 // ============================================================
+// EXPORT — PDF (print dialog — zero dependencies, instant)
+// ============================================================
+function exportPDF() {
+  const text = document.getElementById('resultText').textContent;
+  if (!text) return;
+
+  const isAr = currentLang === 'ar';
+  const name = document.getElementById('field_name')?.value?.trim() || 'resume';
+  const fontFamily = isAr ? "'Arial', 'Tahoma', sans-serif" : "'Arial', sans-serif";
+
+  const rows = text.split('\n').map(line => {
+    const t2 = line.trim();
+    if (!t2) return '<div style="height:6pt"></div>';
+    if (t2.startsWith('==') && t2.endsWith('==')) {
+      const h = t2.replace(/==/g,'').trim();
+      return `<div style="font-size:12pt;font-weight:bold;color:#1d4ed8;border-bottom:1.5pt solid #1d4ed8;margin-top:12pt;margin-bottom:4pt;padding-bottom:2pt">${h}</div>`;
+    }
+    if (t2.startsWith('•')) {
+      return `<div style="margin-${isAr?'right':'left'}:14pt;margin-bottom:2pt">• ${t2.slice(1).trim()}</div>`;
+    }
+    return `<div style="margin-bottom:2pt">${t2}</div>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html><html lang="${isAr?'ar':'en'}" dir="${isAr?'rtl':'ltr'}">
+<head><meta charset="UTF-8"><title>${name}</title>
+<style>@page{margin:18mm 20mm;size:A4}body{font-family:${fontFamily};font-size:11pt;color:#1a1a1a;line-height:1.5;direction:${isAr?'rtl':'ltr'};text-align:${isAr?'right':'left'}}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style>
+</head><body>${rows}</body></html>`;
+
+  const win = window.open('', '_blank');
+  if (!win) { alert(currentLang==='ar'?'فعّل النوافذ المنبثقة في المتصفح':'Allow popups in your browser'); return; }
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => win.print(), 500);
+}
+
+// ============================================================
+// EXPORT — DOCX (raw OOXML + JSZip ~100KB — instant after first load)
+// ============================================================
+async function exportDOCX() {
+  const text = document.getElementById('resultText').textContent;
+  if (!text) return;
+
+  const btn = document.getElementById('exportDocx');
+  const origHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '⏳';
+
+  const isAr = currentLang === 'ar';
+  const name = document.getElementById('field_name')?.value?.trim() || 'resume';
+
+  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  const jc = isAr ? 'right' : 'left';
+  const bidi = isAr ? '<w:bidi/>' : '';
+  let bodyXml = '';
+
+  text.split('\n').forEach(line => {
+    const t2 = line.trim();
+    if (!t2) {
+      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="80"/></w:pPr></w:p>`;
+      return;
+    }
+    if (t2.startsWith('==') && t2.endsWith('==')) {
+      const h = esc(t2.replace(/==/g,'').trim());
+      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:before="240" w:after="80"/><w:pBdr><w:bottom w:val="single" w:sz="8" w:space="1" w:color="1d4ed8"/></w:pBdr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1d4ed8"/><w:sz w:val="24"/></w:rPr><w:t>${h}</w:t></w:r></w:p>`;
+      return;
+    }
+    if (t2.startsWith('•')) {
+      const c = esc(t2.slice(1).trim());
+      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="40"/><w:ind w:${isAr?'right':'left'}="360"/></w:pPr><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t xml:space="preserve">• ${c}</w:t></w:r></w:p>`;
+      return;
+    }
+    const isName = bodyXml === '';
+    const c = esc(t2);
+    if (isName) {
+      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="80"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1e40af"/><w:sz w:val="36"/></w:rPr><w:t>${c}</w:t></w:r></w:p>`;
+    } else {
+      bodyXml += `<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="40"/></w:pPr><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t>${c}</w:t></w:r></w:p>`;
+    }
+  });
+
+  const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${bodyXml}<w:sectPr><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr></w:body></w:document>`;
+  const relsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
+  const ctXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>`;
+  const wordRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"></Relationships>`;
+
+  try {
+    if (!window.JSZip) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+    const zip = new window.JSZip();
+    zip.file('[Content_Types].xml', ctXml);
+    zip.file('_rels/.rels', relsXml);
+    zip.file('word/document.xml', docXml);
+    zip.file('word/_rels/document.xml.rels', wordRels);
+    const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    const url = URL.createObjectURL(blob);
+    const a = window.document.createElement('a');
+    a.href = url; a.download = `${name.replace(/\s+/g,'_')}_ATS.docx`;
+    window.document.body.appendChild(a); a.click();
+    window.document.body.removeChild(a); URL.revokeObjectURL(url);
+  } catch(e) {
+    alert(currentLang==='ar'?'خطأ في التصدير، جرّب مرة ثانية':'Export failed, please try again');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = origHTML;
+}
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = window.document.createElement('script');
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    window.document.head.appendChild(s);
+  });
+}
+
+// ============================================================
 // INIT
 // ============================================================
 setLang(detectLang());
