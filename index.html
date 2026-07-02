@@ -585,7 +585,7 @@ const TOOLS_DATA = {
       fields: [
         { id: "name", label: "اسمك الكامل (مطلوب)", type: "text", placeholder: "مثال: محمد أحمد" },
         { id: "job", label: "المسمى الوظيفي المستهدف", type: "text", placeholder: "مثال: مهندس برمجيات" },
-        { id: "exp", label: "خبراتك ومهاراتك (باختصار)", type: "textarea", placeholder: "اكتب ما تعرفه وما عملت به..." },
+        { id: "exp", label: "خبراتك ومهاراتك (كلما زادت التفاصيل، كانت السيرة أقوى)", type: "textarea", placeholder: "مثال: 5 سنوات خبرة في تطوير Python وJava، بنيت نظام إدارة مخزون خفّض التكاليف 20%، أعرف MySQL وAWS، عملت في شركة تقنية..." },
         { id: "edu", label: "مؤهلك التعليمي (مع اسم الجامعة والسنة إن رغبت)", type: "text", placeholder: "مثال: بكالوريوس حاسب آلي - جامعة الملك سعود - 2022" },
         { id: "phone", label: "رقم الهاتف (اختياري)", type: "text", placeholder: "مثال: 0555555555", optional: true },
         { id: "email", label: "البريد الإلكتروني (اختياري)", type: "text", placeholder: "مثال: name@email.com", optional: true }
@@ -600,7 +600,7 @@ const TOOLS_DATA = {
 البريد الإلكتروني: ${f.email || "(لم يُذكر)"}
 
 تعليمات ATS الصارمة:
-- استخدم هذا التنسيق بالضبط مع نفس العناوين حرفاً بحرف (لأن أنظمة ATS تبحث عن عناوين محددة):
+- استخدم هذا التنسيق بالضبط مع نفس العناوين حرفاً بحرف:
 
 == بيانات التواصل ==
 == الملخص المهني ==
@@ -608,13 +608,14 @@ const TOOLS_DATA = {
 == الخبرات العملية ==
 == التعليم ==
 
-- في قسم المهارات، ضع كل مهارة في سطر منفصل تبدأ بـ "•"
-- في قسم الخبرات، إذا ذُكرت خبرات، رتّبها من الأحدث للأقدم. إذا لم تُذكر خبرات محددة، اكتب ملخصاً لمهارات الشخص كخبرة مهنية عامة.
-- استخدم أفعال قوية تبدأ بها كل نقطة إنجاز (طوّر، نفّذ، أدار، حسّن، صمّم...)
-- ممنوع اختراع شركات أو تواريخ أو جامعات لم تُذكر — استخدم المعطيات فقط
+- في قسم المهارات: كل مهارة في سطر منفصل تبدأ بـ "•" — استخرجها فقط مما ذُكر في "الخبرات والمهارات" أعلاه، لا تخترع مهارات
+- في قسم الخبرات: استخدم الإنجازات والأفعال المذكورة فعلاً. إذا ذُكرت أرقام أو نسب فاستخدمها. إذا لم تُذكر شركة أو مؤسسة بالاسم، اكتب "في بيئة عمل تقنية" فقط ولا تخترع اسماً
+- استخدم أفعال قوية تبدأ بها كل نقطة (طوّر، نفّذ، أدار، حسّن، صمّم، قاد...)
+- الملخص المهني: 2-3 جمل دقيقة مبنية على ما ذُكر فعلاً — لا عبارات إنشائية مطاطة مثل "يسعى للتميز" أو "يتمتع بشخصية قيادية" إذا لم تُذكر
+- ممنوع اختراع شركات أو تواريخ أو جامعات لم تُذكر
 - إذا كان الهاتف أو البريد "(لم يُذكر)"، احذف السطر كاملاً
 - ممنوع أي placeholder أو أسئلة أو تعليقات بعد الانتهاء
-- لا تستخدم جداول أو صور أو أعمدة متعددة — نص خطي فقط لتوافق ATS`
+- نص خطي فقط — لا جداول ولا أعمدة`
     },
     {
       id: "caption", icon: "📱",
@@ -686,7 +687,7 @@ const TOOLS_DATA = {
       fields: [
         { id: "name", label: "Full Name (required)", type: "text", placeholder: "e.g. John Smith" },
         { id: "job", label: "Target Job Title", type: "text", placeholder: "e.g. Software Engineer" },
-        { id: "exp", label: "Your Experience & Skills (brief)", type: "textarea", placeholder: "Describe your skills and what you've worked on..." },
+        { id: "exp", label: "Your Experience & Skills (more detail = stronger resume)", type: "textarea", placeholder: "e.g. 5 years building Python & Java apps, built inventory system saving 20% costs, know MySQL & AWS, worked at a tech startup..." },
         { id: "edu", label: "Education (university & year if available)", type: "text", placeholder: "e.g. BSc Computer Science – MIT – 2022" },
         { id: "phone", label: "Phone Number (optional)", type: "text", placeholder: "e.g. +1 555 0123", optional: true },
         { id: "email", label: "Email Address (optional)", type: "text", placeholder: "e.g. name@email.com", optional: true }
@@ -701,7 +702,7 @@ Phone: ${f.phone || "(not provided)"}
 Email: ${f.email || "(not provided)"}
 
 Strict ATS formatting rules:
-- Use EXACTLY these section headers (ATS systems scan for these):
+- Use EXACTLY these section headers:
 
 == CONTACT INFORMATION ==
 == PROFESSIONAL SUMMARY ==
@@ -709,13 +710,14 @@ Strict ATS formatting rules:
 == WORK EXPERIENCE ==
 == EDUCATION ==
 
-- In CORE SKILLS: list each skill on its own line starting with "•"
-- In WORK EXPERIENCE: use strong action verbs to start each bullet point (Developed, Led, Implemented, Improved, Designed...)
-- If no specific work experience is provided, write a skills-based professional summary section instead
-- Never invent company names, job titles, dates, or university names not mentioned — use only what was provided
-- If phone/email is "(not provided)", omit that line entirely from contact section
-- Use plain linear text only — no tables, columns, graphics, or special characters that ATS cannot parse
-- Never write placeholder text or trailing questions/comments`
+- CORE SKILLS: extract skills only from what was provided in "Experience & Skills" — one per line starting with "•". Do not invent skills.
+- WORK EXPERIENCE: use only the experience, achievements, and numbers actually mentioned. If no company name was given, write "in a technical environment" — never invent a company name. Use strong action verbs (Developed, Led, Implemented, Improved, Designed...).
+- PROFESSIONAL SUMMARY: 2-3 precise sentences based strictly on what was provided — no hollow filler phrases like "passionate about excellence" or "strong communicator" unless explicitly mentioned.
+- If any achievement includes a specific number or percentage, always include it exactly.
+- Never invent company names, job titles, dates, or university names not mentioned.
+- If phone/email is "(not provided)", omit that line entirely.
+- Plain linear text only — no tables, columns, or special characters.
+- Never write placeholder text or trailing questions/comments.`
     },
     {
       id: "caption", icon: "📱",
