@@ -476,7 +476,7 @@
 
 <div class="stats-bar">
   <div class="stat">
-    <div class="stat-num"><span>6</span></div>
+    <div class="stat-num"><span>7</span></div>
     <div class="stat-label" id="stat1">أداة متاحة</div>
   </div>
   <div class="stat">
@@ -538,7 +538,7 @@ const T = {
     heroTag: '✦ مدعوم بالذكاء الاصطناعي',
     heroTitle: 'أدوات <span>ذكية</span><br>تكتب عنك بالعربي',
     heroDesc: 'ست أدوات احترافية تعمل بالذكاء الاصطناعي — مجانية، سريعة، وتفهم العربية.',
-    stat1: 'أداة متاحة', stat2: 'تسجيل مطلوب', stat3: 'استخدام مجاني',
+    stat1: '7 أدوات', stat2: 'تسجيل مطلوب', stat3: 'استخدام مجاني',
     sectionLabel: 'اختر أداة وابدأ',
     runBtn: 'توليد الآن',
     resultLabel: '✓ تم التوليد',
@@ -557,7 +557,7 @@ const T = {
     heroTag: '✦ Powered by AI',
     heroTitle: 'AI tools that<br><span>write for you</span>',
     heroDesc: 'Six free professional AI tools — resumes, emails, captions, replies, summaries, and ideas in seconds.',
-    stat1: 'Tools available', stat2: 'Sign-up needed', stat3: 'Free to use',
+    stat1: '7 Tools', stat2: 'Sign-up needed', stat3: 'Free to use',
     sectionLabel: 'Pick a tool and start',
     runBtn: 'Generate Now',
     resultLabel: '✓ Generated',
@@ -676,6 +676,13 @@ const TOOLS_DATA = {
         { id: "count", label: "عدد الأفكار", type: "select", options: ["5 أفكار", "10 أفكار", "15 فكرة"] }
       ],
       prompt: (f) => `أعطني أفكاراً إبداعية وعملية للتحدي التالي:\n${f.challenge}\nالعدد المطلوب: ${f.count}\n\nلكل فكرة: الفكرة باختصار، شرح موجز (سطرين)، خطوة أولى للتنفيذ. رتّبها من الأسهل للأصعب. لا تضف أسئلة بعد الانتهاء.`
+    },
+    {
+      id: "photo", icon: "🪪",
+      name: "محرر صور الجوازات",
+      desc: "إزالة الخلفية وتغييرها لصور الجوازات والرخص بالذكاء الاصطناعي — بدون إنترنت",
+      tag: "صور", color: "blue",
+      isPhoto: true
     }
   ],
   en: [
@@ -778,6 +785,13 @@ Strict ATS formatting rules:
         { id: "count", label: "Number of ideas", type: "select", options: ["5 ideas", "10 ideas", "15 ideas"] }
       ],
       prompt: (f) => `Give me creative, practical ideas for:\n${f.challenge}\nNumber: ${f.count}\n\nFor each idea: brief title, 2-line explanation, first concrete step. Order from easiest to hardest. Do not end with questions.`
+    },
+    {
+      id: "photo", icon: "🪪",
+      name: "Passport Photo Editor",
+      desc: "Remove & replace backgrounds for passport and ID photos using on-device AI — no internet needed",
+      tag: "Photos", color: "blue",
+      isPhoto: true
     }
   ]
 };
@@ -855,6 +869,10 @@ function renderTools() {
 // MODAL
 // ============================================================
 function openTool(tool) {
+  if (tool.isPhoto) {
+    openPhotoModal();
+    return;
+  }
   currentTool = tool;
   document.getElementById('modalIcon').textContent = tool.icon;
   document.getElementById('modalTitle').textContent = tool.name;
@@ -1185,5 +1203,337 @@ function loadScript(src) {
 // ============================================================
 setLang(detectLang());
 </script>
+<!-- ============================================================
+     PHOTO EDITOR MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="photoModalOverlay">
+  <div class="modal" style="max-width:720px;direction:ltr">
+    <div class="modal-header" style="direction:ltr">
+      <div class="modal-title-group">
+        <span class="modal-icon">🪪</span>
+        <div class="modal-title" id="photoModalTitle">Passport Photo Editor</div>
+        <div class="modal-subtitle">On-device AI · No internet required after first load (~40MB cached)</div>
+      </div>
+      <button class="close-btn" onclick="closePhotoModal()">✕</button>
+    </div>
+    <div class="modal-body" style="direction:ltr">
+
+      <!-- Upload -->
+      <div id="photoUploadZone" style="border:2px dashed #e5e7eb;border-radius:12px;padding:32px;text-align:center;cursor:pointer;background:#fafafa;margin-bottom:14px;transition:all 0.2s" onclick="document.getElementById('photoFileInput').click()">
+        <div style="font-size:36px;margin-bottom:8px">📸</div>
+        <div style="font-weight:700;font-size:15px;margin-bottom:4px">Tap to select or take a photo</div>
+        <div style="font-size:12px;color:#6b7280">JPG, PNG · Max 10MB</div>
+        <input type="file" id="photoFileInput" accept="image/*" style="display:none">
+      </div>
+
+      <!-- Config -->
+      <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin-bottom:14px">
+
+        <!-- Background color -->
+        <div style="margin-bottom:12px">
+          <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">🎨 Background Color</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <div class="photo-swatch active" data-c="#FFFFFF" style="background:#FFFFFF;border:2px solid #d1d5db" onclick="photoSetBg(this,'#FFFFFF')"></div>
+            <div class="photo-swatch" data-c="#4b9cd3" style="background:#4b9cd3" onclick="photoSetBg(this,'#4b9cd3')"></div>
+            <div class="photo-swatch" data-c="#0033aa" style="background:#0033aa" onclick="photoSetBg(this,'#0033aa')"></div>
+            <div class="photo-swatch" data-c="#f2f2f2" style="background:#f2f2f2;border:1px solid #d1d5db" onclick="photoSetBg(this,'#f2f2f2')"></div>
+            <input type="color" id="photoBgCustom" value="#FFFFFF" onchange="photoSetCustomBg(this.value)" style="width:32px;height:32px;border-radius:50%;border:2px solid #d1d5db;cursor:pointer;padding:0">
+            <span style="font-size:11px;color:#6b7280">Custom</span>
+          </div>
+        </div>
+
+        <!-- Zoom & Position -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#6b7280;display:flex;justify-content:space-between">Subject Scale <span id="photoZoomVal">100%</span></label>
+            <input type="range" id="photoZoom" min="30" max="130" value="100" style="width:100%;accent-color:#2563eb;margin-top:4px" oninput="document.getElementById('photoZoomVal').textContent=this.value+'%';photoUpdateComposite()">
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#6b7280;display:flex;justify-content:space-between">Vertical Offset <span id="photoOffsetVal">0px</span></label>
+            <input type="range" id="photoOffset" min="-150" max="150" value="0" style="width:100%;accent-color:#2563eb;margin-top:4px" oninput="document.getElementById('photoOffsetVal').textContent=this.value+'px';photoUpdateComposite()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div id="photoStatus" style="padding:10px 14px;background:#eff6ff;border-radius:10px;font-size:13px;color:#1d4ed8;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+        <span id="photoStatusText">Upload a photo to begin.</span>
+      </div>
+
+      <!-- Preview -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:#6b7280;margin-bottom:6px">📷 Original</div>
+          <div id="photoOrigWrap" style="min-height:120px;display:flex;align-items:center;justify-content:center;background:#f0f4f8;border-radius:8px">
+            <span style="font-size:12px;color:#9ca3af">No image</span>
+          </div>
+        </div>
+        <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:#6b7280;margin-bottom:6px">✨ Result</div>
+          <div id="photoResultWrap" style="min-height:120px;display:flex;align-items:center;justify-content:center;background:#f0f4f8;border-radius:8px">
+            <span style="font-size:12px;color:#9ca3af">Processed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="photoDownload('full')" id="photoDlFull" disabled style="flex:1;padding:11px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;opacity:0.4">⬇ Full Res</button>
+        <button onclick="photoDownload('passport')" id="photoDlPassport" disabled style="flex:1;padding:11px;background:#059669;color:white;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;opacity:0.4">⬇ 600×600</button>
+        <button onclick="photoDownload('sheet')" id="photoDlSheet" disabled style="flex:1;padding:11px;background:#7c3aed;color:white;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;opacity:0.4">🖨 Print Sheet</button>
+        <button onclick="photoReset()" style="padding:11px 16px;background:#f3f4f6;color:#374151;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer">🔄</button>
+      </div>
+
+      <div style="font-size:10px;color:#9ca3af;margin-top:10px;text-align:center">First use downloads ~40MB AI model (cached after that) · Your photos never leave your device</div>
+    </div>
+  </div>
+</div>
+
+<style>
+.photo-swatch {
+  width:32px;height:32px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.15s;position:relative;flex-shrink:0;
+}
+.photo-swatch.active { border-color:#2563eb;transform:scale(1.15); }
+.photo-swatch.active::after { content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2563eb; }
+</style>
+
+<script type="module">
+// ============================================================
+// PHOTO EDITOR — module scope
+// ============================================================
+let photoRemoveBg = null;
+let photoBgColor = '#FFFFFF';
+let photoTransparentBlob = null;
+let photoOrigFile = null;
+let photoPassportBlob = null;
+let photoFullBlob = null;
+let photoSheetBlob = null;
+
+window.openPhotoModal = function() {
+  document.getElementById('photoModalOverlay').classList.add('open');
+  const isAr = document.documentElement.getAttribute('lang') === 'ar';
+  document.getElementById('photoModalTitle').textContent = isAr ? 'محرر صور الجوازات' : 'Passport Photo Editor';
+};
+
+window.closePhotoModal = function() {
+  document.getElementById('photoModalOverlay').classList.remove('open');
+};
+
+document.getElementById('photoModalOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) window.closePhotoModal();
+});
+
+// File input
+document.getElementById('photoFileInput').addEventListener('change', e => {
+  if (e.target.files?.[0]) photoLoadFile(e.target.files[0]);
+  e.target.value = '';
+});
+
+const uploadZone = document.getElementById('photoUploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.style.borderColor='#2563eb'; });
+uploadZone.addEventListener('dragleave', () => { uploadZone.style.borderColor='#e5e7eb'; });
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault(); uploadZone.style.borderColor='#e5e7eb';
+  if (e.dataTransfer.files[0]) photoLoadFile(e.dataTransfer.files[0]);
+});
+
+function photoLoadFile(file) {
+  photoOrigFile = file;
+  photoTransparentBlob = null;
+  photoPassportBlob = null;
+  photoFullBlob = null;
+  photoSheetBlob = null;
+  setPhotoDlState(false);
+
+  // Show original
+  const url = URL.createObjectURL(file);
+  document.getElementById('photoOrigWrap').innerHTML = `<img src="${url}" style="max-width:100%;max-height:160px;border-radius:8px;object-fit:contain">`;
+  document.getElementById('photoResultWrap').innerHTML = '<span style="font-size:12px;color:#9ca3af">Processing...</span>';
+
+  photoProcess(file);
+}
+
+async function loadAI() {
+  const urls = [
+    'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/background-removal.esm.js',
+    'https://unpkg.com/@imgly/background-removal@1.7.0/dist/background-removal.esm.js',
+    'https://esm.sh/@imgly/background-removal@1.7.0'
+  ];
+  for (const url of urls) {
+    try {
+      const m = await import(url);
+      if (typeof m.removeBackground === 'function') return m.removeBackground;
+    } catch(e) { continue; }
+  }
+  throw new Error('Could not load AI library');
+}
+
+async function photoProcess(file) {
+  photoSetStatus('⏳ Loading AI model… first time ~40s then instant', 'blue');
+  try {
+    if (!photoRemoveBg) {
+      photoRemoveBg = await loadAI();
+    }
+    photoSetStatus('🧠 Removing background…', 'blue');
+    const blob = await photoRemoveBg(file, {
+      model: 'isnet',
+      output: { format: 'image/png' },
+      progress: (key, cur, tot) => {
+        const p = Math.round((cur/tot)*100);
+        if (key==='model') photoSetStatus(`📦 Downloading AI model… ${p}%`, 'blue');
+        else if (key==='inference') photoSetStatus(`🧠 Processing… ${p}%`, 'blue');
+      }
+    });
+    photoTransparentBlob = blob;
+    await photoUpdateComposite();
+    photoSetStatus('✅ Done! Adjust zoom & position above.', 'green');
+    setPhotoDlState(true);
+  } catch(e) {
+    photoSetStatus('❌ Failed: ' + e.message, 'red');
+  }
+}
+
+window.photoUpdateComposite = async function() {
+  if (!photoTransparentBlob) return;
+  const zoom = parseInt(document.getElementById('photoZoom').value);
+  const offsetY = parseInt(document.getElementById('photoOffset').value);
+
+  const passCanvas = await photoGenPassport(photoTransparentBlob, photoBgColor, zoom, offsetY);
+  photoPassportBlob = await canvasToBlob(passCanvas);
+
+  const fullCanvas = await photoGenFull(photoTransparentBlob, photoBgColor);
+  photoFullBlob = await canvasToBlob(fullCanvas);
+
+  const sheetCanvas = await photoGenSheet(passCanvas);
+  photoSheetBlob = await canvasToBlob(sheetCanvas);
+
+  const url = URL.createObjectURL(photoPassportBlob);
+  document.getElementById('photoResultWrap').innerHTML = `<img src="${url}" style="max-width:100%;max-height:160px;border-radius:8px;object-fit:contain">`;
+};
+
+function photoGenPassport(blob, bg, zoom, offsetY) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = c.height = 600;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0,0,600,600);
+      const minSize = Math.min(img.width, img.height);
+      const srcCrop = minSize / (zoom/100);
+      const sx = (img.width - srcCrop) / 2;
+      const sy = ((img.height - srcCrop) / 2) + (offsetY * (img.height/600));
+      ctx.drawImage(img, sx, sy, srcCrop, srcCrop, 0, 0, 600, 600);
+      URL.revokeObjectURL(url);
+      res(c);
+    };
+    img.onerror = () => rej(new Error('Failed'));
+    img.src = url;
+  });
+}
+
+function photoGenFull(blob, bg) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = img.width; c.height = img.height;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0,0,c.width,c.height);
+      ctx.drawImage(img,0,0);
+      URL.revokeObjectURL(url);
+      res(c);
+    };
+    img.onerror = () => rej(new Error('Failed'));
+    img.src = url;
+  });
+}
+
+function photoGenSheet(passCanvas) {
+  return new Promise(res => {
+    const sheet = document.createElement('canvas');
+    sheet.width = 1800; sheet.height = 1200;
+    const ctx = sheet.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0,0,1800,1200);
+    const cols=3, rows=2, iW=500, iH=500, startX=100, startY=80, gX=60, gY=40;
+    for (let r=0; r<rows; r++) {
+      for (let c=0; c<cols; c++) {
+        const x = startX + c*(iW+gX);
+        const y = startY + r*(iH+gY);
+        ctx.drawImage(passCanvas, x, y, iW, iH);
+        ctx.strokeStyle='#ddd'; ctx.lineWidth=1.5;
+        ctx.strokeRect(x, y, iW, iH);
+      }
+    }
+    res(sheet);
+  });
+}
+
+function canvasToBlob(c) {
+  return new Promise(res => c.toBlob(res, 'image/png'));
+}
+
+function setPhotoDlState(on) {
+  ['photoDlFull','photoDlPassport','photoDlSheet'].forEach(id => {
+    const el = document.getElementById(id);
+    el.disabled = !on;
+    el.style.opacity = on ? '1' : '0.4';
+    el.style.cursor = on ? 'pointer' : 'not-allowed';
+  });
+}
+
+function photoSetStatus(msg, color) {
+  const colors = { blue:'#eff6ff|#1d4ed8', green:'#f0fdf4|#059669', red:'#fef2f2|#dc2626' };
+  const [bg, fg] = (colors[color]||colors.blue).split('|');
+  const el = document.getElementById('photoStatus');
+  el.style.background = bg;
+  el.style.color = fg;
+  document.getElementById('photoStatusText').textContent = msg;
+}
+
+window.photoSetBg = function(el, color) {
+  document.querySelectorAll('.photo-swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  photoBgColor = color;
+  photoUpdateComposite();
+};
+
+window.photoSetCustomBg = function(color) {
+  document.querySelectorAll('.photo-swatch').forEach(s => s.classList.remove('active'));
+  photoBgColor = color;
+  photoUpdateComposite();
+};
+
+window.photoDownload = function(type) {
+  const map = { full: [photoFullBlob,'id_photo_full.png'], passport: [photoPassportBlob,'passport_600x600.png'], sheet: [photoSheetBlob,'passport_print_4x6.png'] };
+  const [blob, name] = map[type] || [];
+  if (!blob) return;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+};
+
+window.photoReset = function() {
+  photoOrigFile = null; photoTransparentBlob = null;
+  photoPassportBlob = null; photoFullBlob = null; photoSheetBlob = null;
+  document.getElementById('photoOrigWrap').innerHTML = '<span style="font-size:12px;color:#9ca3af">No image</span>';
+  document.getElementById('photoResultWrap').innerHTML = '<span style="font-size:12px;color:#9ca3af">Processed</span>';
+  document.getElementById('photoZoom').value = 100;
+  document.getElementById('photoOffset').value = 0;
+  document.getElementById('photoZoomVal').textContent = '100%';
+  document.getElementById('photoOffsetVal').textContent = '0px';
+  setPhotoDlState(false);
+  photoSetStatus('Upload a photo to begin.', 'blue');
+};
+</script>
+
 </body>
 </html>
