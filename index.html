@@ -438,11 +438,11 @@
   }
 
   footer {
-    text-align: center;
-    padding: 32px;
+    padding: 24px 0;
     font-size: 13px;
     color: var(--muted);
     border-top: 1px solid var(--border);
+    margin-top: 40px;
   }
 
   @media (max-width: 600px) {
@@ -471,13 +471,13 @@
 <section class="hero">
   <div class="hero-tag" id="heroTag">✦ مدعوم بالذكاء الاصطناعي</div>
   <h1 id="heroTitle">أدوات <span>ذكية</span><br>تكتب عنك بالعربي</h1>
-  <p id="heroDesc">ست أدوات احترافية تعمل بالذكاء الاصطناعي — مجانية، سريعة، وتفهم العربية.</p>
+  <p id="heroDesc">سبع أدوات احترافية تعمل بالذكاء الاصطناعي — مجانية، سريعة، وتفهم العربية والإنجليزية.</p>
 </section>
 
 <div class="stats-bar">
   <div class="stat">
     <div class="stat-num"><span>7</span></div>
-    <div class="stat-label" id="stat1">أداة متاحة</div>
+    <div class="stat-label" id="stat1">7 أدوات</div>
   </div>
   <div class="stat">
     <div class="stat-num"><span>0</span></div>
@@ -525,7 +525,36 @@
   </div>
 </div>
 
-<footer id="footer">صُنع بـ ❤ · جميع الأدوات مجانية · مدعوم بالذكاء الاصطناعي</footer>
+<footer id="footer">
+  <div style="max-width:900px;margin:0 auto;padding:0 20px">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px">
+      <span id="footerMain">صُنع بـ ❤ · جميع الأدوات مجانية · مدعوم بالذكاء الاصطناعي</span>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <a href="#" onclick="openLegal('privacy');return false;" id="linkPrivacy" style="color:var(--muted);text-decoration:none;font-size:12px;font-weight:600">سياسة الخصوصية</a>
+        <a href="#" onclick="openLegal('terms');return false;" id="linkTerms" style="color:var(--muted);text-decoration:none;font-size:12px;font-weight:600">شروط الاستخدام</a>
+        <a href="#" onclick="openLegal('disclaimer');return false;" id="linkDisclaimer" style="color:var(--muted);text-decoration:none;font-size:12px;font-weight:600">إخلاء المسؤولية</a>
+      </div>
+    </div>
+    <div style="font-size:11px;color:#9ca3af;border-top:1px solid var(--border);padding-top:12px" id="footerDisclaimer">
+      ⚠️ المحتوى المولّد بالذكاء الاصطناعي للأغراض الشخصية والتعليمية فقط — لا يُعتمد عليه في الأغراض القانونية أو الرسمية. صور الجوازات تُعالج محلياً على جهازك ولا ترسل لأي سيرفر.
+    </div>
+  </div>
+</footer>
+
+<!-- LEGAL MODAL -->
+<div class="modal-overlay" id="legalModal">
+  <div class="modal" style="max-width:680px;max-height:88vh;overflow-y:auto">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <span class="modal-icon" id="legalIcon">📋</span>
+        <div class="modal-title" id="legalTitle">سياسة الخصوصية</div>
+        <div class="modal-subtitle" id="legalSubtitle">آخر تحديث: يوليو 2026</div>
+      </div>
+      <button class="close-btn" onclick="closeLegal()">✕</button>
+    </div>
+    <div class="modal-body" id="legalBody" style="font-size:13.5px;line-height:1.9;color:#374151"></div>
+  </div>
+</div>
 
 <script>
 // ============================================================
@@ -536,8 +565,8 @@ const T = {
     logo: 'ذكاء ✦',
     badge: 'مجاني 100%',
     heroTag: '✦ مدعوم بالذكاء الاصطناعي',
-    heroTitle: 'أدوات <span>ذكية</span><br>تكتب عنك بالعربي',
-    heroDesc: 'ست أدوات احترافية تعمل بالذكاء الاصطناعي — مجانية، سريعة، وتفهم العربية.',
+    heroTitle: 'أدوات <span>ذكية</span><br>تكتب عنك بالعربي والإنجليزي',
+    heroDesc: 'سبع أدوات احترافية تعمل بالذكاء الاصطناعي — مجانية، سريعة، وتفهم العربية.',
     stat1: '7 أدوات', stat2: 'تسجيل مطلوب', stat3: 'استخدام مجاني',
     sectionLabel: 'اختر أداة وابدأ',
     runBtn: 'توليد الآن',
@@ -556,7 +585,7 @@ const T = {
     badge: '100% Free',
     heroTag: '✦ Powered by AI',
     heroTitle: 'AI tools that<br><span>write for you</span>',
-    heroDesc: 'Six free professional AI tools — resumes, emails, captions, replies, summaries, and ideas in seconds.',
+    heroDesc: 'Seven free professional AI tools — resumes, emails, captions, replies, summaries, ideas, and passport photos in seconds.',
     stat1: '7 Tools', stat2: 'Sign-up needed', stat3: 'Free to use',
     sectionLabel: 'Pick a tool and start',
     runBtn: 'Generate Now',
@@ -835,7 +864,21 @@ function setLang(lang) {
   document.getElementById('runBtnText').textContent = t.runBtn;
   document.getElementById('resultLabel').textContent = t.resultLabel;
   document.getElementById('copyBtn').textContent = t.copyBtn;
-  document.getElementById('footer').textContent = t.footer;
+
+  // Footer — update individual elements (not the whole footer to preserve HTML structure)
+  const links = lang === 'ar'
+    ? { main: 'صُنع بـ ❤ · جميع الأدوات مجانية · مدعوم بالذكاء الاصطناعي', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام', disclaimer: 'إخلاء المسؤولية', fdisclaimer: '⚠️ المحتوى المولّد بالذكاء الاصطناعي للأغراض الشخصية والتعليمية فقط — لا يُعتمد عليه في الأغراض القانونية أو الرسمية. صور الجوازات تُعالج محلياً على جهازك.' }
+    : { main: 'Made with ❤ · All tools are free · Powered by AI', privacy: 'Privacy Policy', terms: 'Terms of Use', disclaimer: 'Disclaimer', fdisclaimer: '⚠️ AI-generated content is for personal and educational use only — not for official or legal purposes. Passport photos are processed locally on your device.' };
+  const fMain = document.getElementById('footerMain');
+  const fPrivacy = document.getElementById('linkPrivacy');
+  const fTerms = document.getElementById('linkTerms');
+  const fDisc = document.getElementById('linkDisclaimer');
+  const fDiscText = document.getElementById('footerDisclaimer');
+  if (fMain) fMain.textContent = links.main;
+  if (fPrivacy) fPrivacy.textContent = links.privacy;
+  if (fTerms) fTerms.textContent = links.terms;
+  if (fDisc) fDisc.textContent = links.disclaimer;
+  if (fDiscText) fDiscText.textContent = links.fdisclaimer;
 
   document.getElementById('btnAr').classList.toggle('active', lang === 'ar');
   document.getElementById('btnEn').classList.toggle('active', lang === 'en');
@@ -1198,6 +1241,199 @@ function loadScript(src) {
   });
 }
 
+// ============================================================
+// LEGAL MODAL
+// ============================================================
+const LEGAL = {
+  ar: {
+    privacy: {
+      icon: '🔒',
+      title: 'سياسة الخصوصية',
+      subtitle: 'آخر تحديث: يوليو 2026',
+      body: `
+<h3 style="color:#1d4ed8;margin-bottom:8px">1. المقدمة</h3>
+<p>تصف هذه السياسة كيفية تعامل منصة <strong>ذكاء (Zakia)</strong> مع بيانات المستخدمين. نحن ملتزمون بحماية خصوصيتك وفقاً للمبادئ العامة لحماية البيانات المعمول بها في المملكة العربية السعودية ودول الخليج العربي وسائر الدول العربية.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">2. البيانات التي نجمعها — لا شيء</h3>
+<p>لا تجمع المنصة أي بيانات شخصية تعريفية. لا حسابات، لا تسجيل، لا ملفات تعريف الارتباط (Cookies) التتبعية. جميع الأدوات تعمل بشكل مباشر في متصفحك.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">3. معالجة النصوص</h3>
+<p>النصوص التي تدخلها في الأدوات الكتابية (السيرة الذاتية، الرسائل، الكابشن...) تُرسل إلى <strong>Groq API</strong> عبر وسيط مشفّر (Cloudflare Worker) لتوليد الردود. هذه النصوص لا تُخزَّن من قِبَلنا. يخضع استخدام Groq لسياسة خصوصية Groq المستقلة.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">4. معالجة الصور</h3>
+<p>أداة محرر صور الجوازات تعمل <strong>محلياً على جهازك بالكامل</strong> باستخدام نموذج ذكاء اصطناعي يعمل داخل المتصفح. صورك لا تُرسل إلى أي سيرفر خارجي ولا تُخزَّن في أي مكان خارج جهازك.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">5. مزودو الخدمات الخارجيون</h3>
+<p>نستخدم الخدمات التالية التي لها سياسات خصوصية مستقلة: <strong>Groq</strong> (معالجة النصوص) · <strong>Cloudflare</strong> (البنية التحتية) · <strong>GitHub Pages</strong> (الاستضافة). لا نشارك أي بيانات مع أطراف ثالثة لأغراض تجارية أو إعلانية.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">6. حقوقك</h3>
+<p>بما أننا لا نجمع أي بيانات شخصية، لا توجد بيانات لحذفها أو تصحيحها أو الاطلاع عليها. المنصة مصممة بمبدأ <em>Privacy by Design</em>.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">7. التغييرات على هذه السياسة</h3>
+<p>نحتفظ بالحق في تحديث هذه السياسة في أي وقت. سيُشار إلى تاريخ آخر تحديث في أعلى الصفحة.</p>
+      `
+    },
+    terms: {
+      icon: '📋',
+      title: 'شروط الاستخدام',
+      subtitle: 'آخر تحديث: يوليو 2026',
+      body: `
+<h3 style="color:#1d4ed8;margin-bottom:8px">1. قبول الشروط</h3>
+<p>باستخدامك منصة <strong>ذكاء (Zakia)</strong>، فأنت توافق على هذه الشروط كاملةً. إذا كنت لا توافق على أي بند، يرجى التوقف عن استخدام المنصة.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">2. طبيعة الخدمة</h3>
+<p>المنصة أداة مساعدة للكتابة تستند إلى تقنيات الذكاء الاصطناعي. المحتوى المولَّد هو اقتراحات آلية <strong>لا تمثّل رأياً قانونياً أو مهنياً أو طبياً أو مالياً</strong>، وهي للأغراض الشخصية والتعليمية فقط.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">3. الاستخدام المقبول</h3>
+<p>يوافق المستخدم على عدم استخدام المنصة في:</p>
+<ul style="padding-right:20px;margin-top:6px">
+  <li style="margin-bottom:4px">توليد محتوى مضلل أو احتيالي أو مزيف</li>
+  <li style="margin-bottom:4px">انتهاك حقوق الملكية الفكرية للغير</li>
+  <li style="margin-bottom:4px">أي نشاط مخالف للقوانين المعمول بها في بلد المستخدم</li>
+  <li style="margin-bottom:4px">إنشاء وثائق رسمية مزوّرة أو مضللة</li>
+  <li style="margin-bottom:4px">الاستخدام التجاري المكثف الذي يستنزف موارد الخدمة بشكل غير مشروع</li>
+</ul>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">4. الملكية الفكرية</h3>
+<p>تصميم المنصة وكودها البرمجي محفوظة حقوقهما. المحتوى الذي يولّده المستخدم باستخدام أدواتنا يعود ملكيته له، مع مراعاة شروط مزودي نماذج الذكاء الاصطناعي المستخدمة.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">5. حدود الخدمة</h3>
+<p>نحتفظ بالحق في تعليق الخدمة أو تعديلها أو إيقافها في أي وقت دون إشعار مسبق، مع السعي لضمان الاستمرارية قدر الإمكان.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">6. القانون المطبّق</h3>
+<p>تخضع هذه الشروط للمبادئ العامة للقانون الرقمي المعمول بها في المملكة العربية السعودية، مع مراعاة القوانين المحلية في بلد المستخدم.</p>
+      `
+    },
+    disclaimer: {
+      icon: '⚠️',
+      title: 'إخلاء المسؤولية',
+      subtitle: 'يرجى القراءة بعناية',
+      body: `
+<h3 style="color:#dc2626;margin-bottom:8px">1. محدودية الذكاء الاصطناعي</h3>
+<p>المحتوى الذي تولّده أدوات هذه المنصة مبني على نماذج ذكاء اصطناعي احتمالية. قد يحتوي على أخطاء، معلومات غير دقيقة، أو محتوى غير مناسب. <strong>لا تعتمد عليه دون مراجعة بشرية متخصصة.</strong></p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">2. الوثائق الرسمية</h3>
+<p>السير الذاتية والرسائل الرسمية والوثائق المولّدة عبر المنصة تحتاج إلى مراجعة ومصادقة من قِبَل أصحابها قبل استخدامها رسمياً. <strong>المنصة لا تتحمل أي مسؤولية عن عواقب استخدام هذه الوثائق في سياقات رسمية أو قانونية أو مهنية.</strong></p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">3. صور الجوازات والهوية</h3>
+<p>صور الجوازات المعدّلة عبر الأداة هي للمعاينة الشخصية فقط. <strong>قد لا تستوفي المتطلبات الرسمية للجهات الحكومية</strong> في مختلف الدول. يتحمل المستخدم المسؤولية الكاملة عن التحقق من المتطلبات الرسمية قبل استخدام أي صورة في وثيقة رسمية.</p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">4. استمرارية الخدمة</h3>
+<p>لا نضمن توافر الخدمة بشكل مستمر أو خالٍ من الأخطاء. قد تتأثر الخدمة بسبب انقطاع في مزودي الخدمات الخارجيين (Groq، Cloudflare، GitHub).</p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">5. حدود المسؤولية</h3>
+<p>في أقصى الحدود التي يسمح بها القانون، <strong>لا تتحمل المنصة أي مسؤولية</strong> عن أي أضرار مباشرة أو غير مباشرة ناتجة عن استخدام الخدمة أو الاعتماد على المحتوى المولَّد.</p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">6. المحتوى المولّد</h3>
+<p>المستخدم وحده مسؤول عن المحتوى الذي يدخله والمحتوى الذي يستخدمه. المنصة وسيط تقني محايد ولا تتبنى أو تصادق على أي محتوى مولَّد.</p>
+      `
+    }
+  },
+  en: {
+    privacy: {
+      icon: '🔒',
+      title: 'Privacy Policy',
+      subtitle: 'Last updated: July 2026',
+      body: `
+<h3 style="color:#1d4ed8;margin-bottom:8px">1. Introduction</h3>
+<p><strong>Zakia</strong> is committed to protecting your privacy. This policy describes how we handle user data in accordance with applicable data protection principles, including GDPR principles for EU users and relevant regulations in other jurisdictions.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">2. Data We Collect — None</h3>
+<p>We do not collect, store, or process any personally identifiable information. There are no user accounts, no tracking cookies, and no analytics. All tools operate directly in your browser.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">3. Text Processing</h3>
+<p>Text you enter in writing tools is sent to <strong>Groq API</strong> via an encrypted intermediary (Cloudflare Worker) to generate responses. This text is not stored by us. Groq's independent privacy policy governs their data handling.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">4. Photo Processing</h3>
+<p>The Passport Photo Editor runs <strong>entirely on your device</strong> using an in-browser AI model. Your photos are never sent to any external server and are never stored outside your device.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">5. Third-Party Service Providers</h3>
+<p>We use: <strong>Groq</strong> (text processing) · <strong>Cloudflare</strong> (infrastructure) · <strong>GitHub Pages</strong> (hosting). Each has their own privacy policy. We do not share any data with third parties for commercial or advertising purposes.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">6. Your Rights</h3>
+<p>Since we collect no personal data, there is nothing to delete, correct, or access. This platform is built on the principle of <em>Privacy by Design</em>.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">7. Changes to This Policy</h3>
+<p>We reserve the right to update this policy at any time. The last updated date will always be shown at the top.</p>
+      `
+    },
+    terms: {
+      icon: '📋',
+      title: 'Terms of Use',
+      subtitle: 'Last updated: July 2026',
+      body: `
+<h3 style="color:#1d4ed8;margin-bottom:8px">1. Acceptance of Terms</h3>
+<p>By using <strong>Zakia</strong>, you agree to these terms in full. If you disagree with any provision, please stop using the platform.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">2. Nature of Service</h3>
+<p>Zakia is an AI-assisted writing tool. Generated content represents automated suggestions and <strong>does not constitute legal, professional, medical, or financial advice</strong>. It is intended for personal and educational use only.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">3. Acceptable Use</h3>
+<p>You agree not to use this platform to:</p>
+<ul style="padding-left:20px;margin-top:6px">
+  <li style="margin-bottom:4px">Generate misleading, fraudulent, or deceptive content</li>
+  <li style="margin-bottom:4px">Infringe third-party intellectual property rights</li>
+  <li style="margin-bottom:4px">Engage in any activity unlawful in your jurisdiction</li>
+  <li style="margin-bottom:4px">Create forged or falsified official documents</li>
+  <li style="margin-bottom:4px">Abuse the service in ways that exhaust shared resources</li>
+</ul>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">4. Intellectual Property</h3>
+<p>The platform's design and source code are proprietary. Content generated by users using our tools belongs to the user, subject to the terms of the underlying AI model providers.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">5. Service Availability</h3>
+<p>We reserve the right to suspend, modify, or discontinue the service at any time without prior notice, while endeavoring to maintain continuity where possible.</p>
+
+<h3 style="color:#1d4ed8;margin:16px 0 8px">6. Governing Law</h3>
+<p>These terms are governed by applicable digital commerce law in the Kingdom of Saudi Arabia, without prejudice to mandatory consumer protection laws in your country of residence.</p>
+      `
+    },
+    disclaimer: {
+      icon: '⚠️',
+      title: 'Disclaimer',
+      subtitle: 'Please read carefully',
+      body: `
+<h3 style="color:#dc2626;margin-bottom:8px">1. AI Limitations</h3>
+<p>Content generated by this platform's tools is produced by probabilistic AI models. It may contain errors, inaccuracies, or inappropriate content. <strong>Never rely on it without expert human review.</strong></p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">2. Official Documents</h3>
+<p>Resumes, formal letters, and other documents generated via this platform require review and verification by their owners before official use. <strong>We accept no liability for consequences arising from the use of generated content in official, legal, or professional contexts.</strong></p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">3. Passport & ID Photos</h3>
+<p>Photos edited through this tool are for personal preview purposes only. <strong>They may not meet official requirements</strong> set by government authorities in your country. You are solely responsible for verifying compliance with official photo standards before submitting any image in an official document.</p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">4. Service Continuity</h3>
+<p>We do not guarantee uninterrupted or error-free service. Availability may be affected by outages of third-party providers (Groq, Cloudflare, GitHub).</p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">5. Limitation of Liability</h3>
+<p>To the maximum extent permitted by applicable law, <strong>we accept no liability</strong> for any direct or indirect damages resulting from use of the service or reliance on generated content.</p>
+
+<h3 style="color:#dc2626;margin:16px 0 8px">6. User Responsibility</h3>
+<p>You are solely responsible for the content you input and any content you choose to use. This platform is a neutral technical intermediary and does not endorse or validate any generated content.</p>
+      `
+    }
+  }
+};
+
+function openLegal(type) {
+  const lang = currentLang;
+  const data = LEGAL[lang][type];
+  document.getElementById('legalIcon').textContent = data.icon;
+  document.getElementById('legalTitle').textContent = data.title;
+  document.getElementById('legalSubtitle').textContent = data.subtitle;
+  document.getElementById('legalBody').innerHTML = data.body;
+  document.getElementById('legalModal').classList.add('open');
+}
+
+function closeLegal() {
+  document.getElementById('legalModal').classList.remove('open');
+}
+
+document.getElementById('legalModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeLegal();
+});
+
+// ============================================================
 // ============================================================
 // INIT
 // ============================================================
