@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mkaaameen-ops.github.io/Thakaa/sitemap.xml
