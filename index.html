@@ -706,42 +706,9 @@ const TOOLS_DATA = {
     {
       id: "cv", icon: "📄",
       name: "محسّن السيرة الذاتية",
-      desc: "حوّل معلوماتك البسيطة إلى سيرة ذاتية احترافية جاهزة للتقديم",
+      desc: "ارفع سيرتك الذاتية أو أدخل بياناتك — تحويل فوري لتنسيق ATS احترافي مع تصدير PDF وWord",
       tag: "أعمال", color: "blue",
-      fields: [
-        { id: "name", label: "اسمك الكامل (مطلوب)", type: "text", placeholder: "مثال: محمد أحمد" },
-        { id: "job", label: "المسمى الوظيفي المستهدف", type: "text", placeholder: "مثال: مهندس برمجيات" },
-        { id: "exp", label: "خبراتك ومهاراتك (كلما زادت التفاصيل، كانت السيرة أقوى)", type: "textarea", placeholder: "مثال: 5 سنوات خبرة في تطوير Python وJava، بنيت نظام إدارة مخزون خفّض التكاليف 20%، أعرف MySQL وAWS، عملت في شركة تقنية..." },
-        { id: "edu", label: "مؤهلك التعليمي (مع اسم الجامعة والسنة إن رغبت)", type: "text", placeholder: "مثال: بكالوريوس حاسب آلي - جامعة الملك سعود - 2022" },
-        { id: "phone", label: "رقم الهاتف (اختياري)", type: "text", placeholder: "مثال: 0555555555", optional: true },
-        { id: "email", label: "البريد الإلكتروني (اختياري)", type: "text", placeholder: "مثال: name@email.com", optional: true }
-      ],
-      prompt: (f) => `أنت خبير في كتابة السير الذاتية المحسّنة لنظام تتبع المتقدمين ATS. اكتب سيرة ذاتية احترافية ومتوافقة مع ATS باللغة العربية الفصحى للشخص التالي:
-
-الاسم الكامل: ${f.name}
-المسمى الوظيفي المستهدف: ${f.job}
-الخبرات والمهارات: ${f.exp}
-المؤهل التعليمي: ${f.edu}
-رقم الهاتف: ${f.phone || "(لم يُذكر)"}
-البريد الإلكتروني: ${f.email || "(لم يُذكر)"}
-
-تعليمات ATS الصارمة:
-- استخدم هذا التنسيق بالضبط مع نفس العناوين حرفاً بحرف:
-
-== بيانات التواصل ==
-== الملخص المهني ==
-== المهارات الأساسية ==
-== الخبرات العملية ==
-== التعليم ==
-
-- في قسم المهارات: كل مهارة في سطر منفصل تبدأ بـ "•" — استخرجها فقط مما ذُكر في "الخبرات والمهارات" أعلاه، لا تخترع مهارات
-- في قسم الخبرات: استخدم الإنجازات والأفعال المذكورة فعلاً. إذا ذُكرت أرقام أو نسب فاستخدمها. إذا لم تُذكر شركة أو مؤسسة بالاسم، اكتب "في بيئة عمل تقنية" فقط ولا تخترع اسماً. كل نقطة في قسم الخبرات يجب أن تبدأ بالرمز "•" ثم فعل ماضٍ قوي
-- استخدم أفعال قوية تبدأ بها كل نقطة (طوّر، نفّذ، أدار، حسّن، صمّم، قاد...)
-- الملخص المهني: 2-3 جمل دقيقة مبنية على ما ذُكر فعلاً — لا عبارات إنشائية مطاطة مثل "يسعى للتميز" أو "يتمتع بشخصية قيادية" إذا لم تُذكر
-- ممنوع اختراع شركات أو تواريخ أو جامعات لم تُذكر
-- إذا كان الهاتف أو البريد "(لم يُذكر)"، احذف السطر كاملاً
-- ممنوع أي placeholder أو أسئلة أو تعليقات بعد الانتهاء
-- نص خطي فقط — لا جداول ولا أعمدة`
+      isCV: true
     },
     {
       id: "caption", icon: "📱",
@@ -814,43 +781,10 @@ const TOOLS_DATA = {
   en: [
     {
       id: "cv", icon: "📄",
-      name: "Resume Builder",
-      desc: "Turn your basic info into a polished, professional resume ready to send",
+      name: "Resume Builder & ATS Converter",
+      desc: "Upload your existing resume or enter your info — instant ATS-optimized formatting with PDF & Word export",
       tag: "Career", color: "blue",
-      fields: [
-        { id: "name", label: "Full Name (required)", type: "text", placeholder: "e.g. John Smith" },
-        { id: "job", label: "Target Job Title", type: "text", placeholder: "e.g. Software Engineer" },
-        { id: "exp", label: "Your Experience & Skills (more detail = stronger resume)", type: "textarea", placeholder: "e.g. 5 years building Python & Java apps, built inventory system saving 20% costs, know MySQL & AWS, worked at a tech startup..." },
-        { id: "edu", label: "Education (university & year if available)", type: "text", placeholder: "e.g. BSc Computer Science – MIT – 2022" },
-        { id: "phone", label: "Phone Number (optional)", type: "text", placeholder: "e.g. +1 555 0123", optional: true },
-        { id: "email", label: "Email Address (optional)", type: "text", placeholder: "e.g. name@email.com", optional: true }
-      ],
-      prompt: (f) => `You are an expert ATS-optimized resume writer. Write a professional resume in English that passes Applicant Tracking Systems (ATS) for:
-
-Full Name: ${f.name}
-Target Job Title: ${f.job}
-Experience & Skills: ${f.exp}
-Education: ${f.edu}
-Phone: ${f.phone || "(not provided)"}
-Email: ${f.email || "(not provided)"}
-
-Strict ATS formatting rules:
-- Use EXACTLY these section headers:
-
-== CONTACT INFORMATION ==
-== PROFESSIONAL SUMMARY ==
-== CORE SKILLS ==
-== WORK EXPERIENCE ==
-== EDUCATION ==
-
-- CORE SKILLS: extract skills only from what was provided in "Experience & Skills" — one per line starting with "•". Do not invent skills.
-- WORK EXPERIENCE: use only the experience, achievements, and numbers actually mentioned. If no company name was given, write "in a technical environment" — never invent a company name. Use strong action verbs (Developed, Led, Implemented, Improved, Designed...).
-- PROFESSIONAL SUMMARY: 2-3 precise sentences based strictly on what was provided — no hollow filler phrases like "passionate about excellence" or "strong communicator" unless explicitly mentioned.
-- If any achievement includes a specific number or percentage, always include it exactly.
-- Never invent company names, job titles, dates, or university names not mentioned.
-- If phone/email is "(not provided)", omit that line entirely.
-- Plain linear text only — no tables, columns, or special characters.
-- Never write placeholder text or trailing questions/comments.`
+      isCV: true
     },
     {
       id: "caption", icon: "📱",
@@ -1009,10 +943,8 @@ function renderTools() {
 // MODAL
 // ============================================================
 function openTool(tool) {
-  if (tool.isPhoto) {
-    openPhotoModal();
-    return;
-  }
+  if (tool.isPhoto) { openPhotoModal(); return; }
+  if (tool.isCV) { openCVModal(); return; }
   currentTool = tool;
   document.getElementById('modalIcon').textContent = tool.icon;
   document.getElementById('modalTitle').textContent = tool.name;
@@ -1868,5 +1800,392 @@ window.photoReset = function() {
 };
 </script>
 
+<!-- ============================================================
+     CV / ATS MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="cvModalOverlay">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <span class="modal-icon">📄</span>
+        <div class="modal-title" id="cvModalTitle">محسّن السيرة الذاتية ATS</div>
+        <div class="modal-subtitle" id="cvModalSub">ارفع ملفك أو أدخل بياناتك — تحويل فوري لتنسيق ATS</div>
+      </div>
+      <button class="close-btn" onclick="closeCVModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- TABS -->
+      <div style="display:flex;gap:8px;margin-bottom:18px;background:#f3f4f6;border-radius:12px;padding:4px">
+        <button id="cvTabUpload" onclick="cvSwitchTab('upload')" style="flex:1;padding:10px;border:none;border-radius:9px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:white;color:#2563eb;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          📂 <span id="cvTabUploadLabel">رفع ملف موجود</span>
+        </button>
+        <button id="cvTabManual" onclick="cvSwitchTab('manual')" style="flex:1;padding:10px;border:none;border-radius:9px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:#6b7280">
+          ✏️ <span id="cvTabManualLabel">إدخال يدوي</span>
+        </button>
+      </div>
+
+      <!-- UPLOAD TAB -->
+      <div id="cvUploadTab">
+        <div id="cvDropZone" onclick="document.getElementById('cvFileInput').click()"
+          style="border:2px dashed #e5e7eb;border-radius:12px;padding:36px;text-align:center;cursor:pointer;background:#fafafa;transition:all 0.2s;margin-bottom:14px">
+          <div style="font-size:40px;margin-bottom:10px">📎</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px" id="cvDropTitle">اسحب ملف السيرة الذاتية هنا أو اضغط للاختيار</div>
+          <div style="font-size:12px;color:#6b7280" id="cvDropSub">PDF أو Word (.docx) · حتى 5MB</div>
+          <input type="file" id="cvFileInput" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none">
+        </div>
+        <div id="cvFileStatus" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px;margin-bottom:14px;font-size:13px;color:#059669;font-weight:600"></div>
+        <div id="cvJobTargetGroup" style="margin-bottom:14px;display:none">
+          <label style="display:block;font-size:13px;font-weight:700;margin-bottom:6px" id="cvJobLabel">المسمى الوظيفي المستهدف (اختياري)</label>
+          <input type="text" id="cvJobUpload" placeholder="مثال: مهندس برمجيات أول" style="width:100%;font-family:'Cairo',sans-serif;font-size:14px;border:1.5px solid #e5e7eb;border-radius:10px;padding:11px 14px;outline:none">
+        </div>
+      </div>
+
+      <!-- MANUAL TAB -->
+      <div id="cvManualTab" style="display:none">
+        <div class="field-group">
+          <label class="field-label" id="cvLabelName">اسمك الكامل (مطلوب)</label>
+          <input type="text" id="cvName" placeholder="مثال: محمد أحمد">
+        </div>
+        <div class="field-group">
+          <label class="field-label" id="cvLabelJob">المسمى الوظيفي المستهدف</label>
+          <input type="text" id="cvJob" placeholder="مثال: مهندس برمجيات">
+        </div>
+        <div class="field-group">
+          <label class="field-label" id="cvLabelExp">خبراتك ومهاراتك (كلما زادت التفاصيل، كانت السيرة أقوى)</label>
+          <textarea id="cvExp" placeholder="مثال: 5 سنوات في تطوير Python وJava، بنيت نظام إدارة خفّض التكاليف 20%، أعرف MySQL وAWS..." style="min-height:120px"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label" id="cvLabelEdu">المؤهل التعليمي</label>
+          <input type="text" id="cvEdu" placeholder="مثال: بكالوريوس حاسب آلي - جامعة الملك سعود - 2022">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field-group">
+            <label class="field-label" id="cvLabelPhone">رقم الهاتف (اختياري)</label>
+            <input type="text" id="cvPhone" placeholder="0555555555">
+          </div>
+          <div class="field-group">
+            <label class="field-label" id="cvLabelEmail">البريد الإلكتروني (اختياري)</label>
+            <input type="text" id="cvEmailField" placeholder="name@email.com">
+          </div>
+        </div>
+      </div>
+
+      <!-- GENERATE BUTTON -->
+      <button class="run-btn" id="cvRunBtn" onclick="runCVTool()" style="margin-top:4px">
+        ✦ <span id="cvRunBtnText">تحويل لتنسيق ATS</span>
+      </button>
+
+      <div class="loading-dots" id="cvLoading">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+
+      <!-- RESULT -->
+      <div class="result-box" id="cvResultBox" style="display:none">
+        <div class="result-header">
+          <span class="result-label">✓ <span id="cvResultLabel">تم التحويل</span></span>
+          <button class="copy-btn" onclick="cvCopyResult()" id="cvCopyBtn">نسخ</button>
+        </div>
+        <div id="cvResultText" style="white-space:pre-wrap;font-size:13.5px;line-height:1.8"></div>
+        <div class="export-row visible" style="margin-top:12px">
+          <button class="export-btn btn-pdf" onclick="cvExportPDF()">📄 PDF</button>
+          <button class="export-btn btn-docx" onclick="cvExportDOCX()">📝 Word</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CV MODAL
+// ============================================================
+let cvCurrentTab = 'upload';
+let cvExtractedText = '';
+let cvResultContent = '';
+
+window.openCVModal = function() {
+  const isAr = currentLang === 'ar';
+  document.getElementById('cvModalTitle').textContent = isAr ? 'محسّن السيرة الذاتية ATS' : 'Resume Builder & ATS Converter';
+  document.getElementById('cvModalSub').textContent = isAr ? 'ارفع ملفك أو أدخل بياناتك — تحويل فوري لتنسيق ATS' : 'Upload your file or enter your info — instant ATS conversion';
+  document.getElementById('cvTabUploadLabel').textContent = isAr ? 'رفع ملف موجود' : 'Upload File';
+  document.getElementById('cvTabManualLabel').textContent = isAr ? 'إدخال يدوي' : 'Enter Manually';
+  document.getElementById('cvDropTitle').textContent = isAr ? 'اسحب ملف السيرة الذاتية هنا أو اضغط للاختيار' : 'Drag your resume here or click to choose';
+  document.getElementById('cvDropSub').textContent = isAr ? 'PDF أو Word (.docx) · حتى 5MB' : 'PDF or Word (.docx) · Max 5MB';
+  document.getElementById('cvJobLabel').textContent = isAr ? 'المسمى الوظيفي المستهدف (اختياري)' : 'Target Job Title (optional)';
+  document.getElementById('cvLabelName').textContent = isAr ? 'اسمك الكامل (مطلوب)' : 'Full Name (required)';
+  document.getElementById('cvLabelJob').textContent = isAr ? 'المسمى الوظيفي المستهدف' : 'Target Job Title';
+  document.getElementById('cvLabelExp').textContent = isAr ? 'خبراتك ومهاراتك (التفاصيل = نتيجة أقوى)' : 'Experience & Skills (more detail = stronger result)';
+  document.getElementById('cvLabelEdu').textContent = isAr ? 'المؤهل التعليمي' : 'Education';
+  document.getElementById('cvLabelPhone').textContent = isAr ? 'رقم الهاتف (اختياري)' : 'Phone (optional)';
+  document.getElementById('cvLabelEmail').textContent = isAr ? 'البريد الإلكتروني (اختياري)' : 'Email (optional)';
+  document.getElementById('cvRunBtnText').textContent = isAr ? 'تحويل لتنسيق ATS' : 'Convert to ATS Format';
+  document.getElementById('cvResultLabel').textContent = isAr ? 'تم التحويل' : 'Converted';
+  document.getElementById('cvCopyBtn').textContent = isAr ? 'نسخ' : 'Copy';
+  document.getElementById('cvResultBox').style.display = 'none';
+  document.getElementById('cvLoading').classList.remove('visible');
+  document.getElementById('cvRunBtn').disabled = false;
+  cvResultContent = '';
+  cvExtractedText = '';
+  document.getElementById('cvFileStatus').style.display = 'none';
+  document.getElementById('cvModalOverlay').classList.add('open');
+  cvSwitchTab('upload');
+};
+
+window.closeCVModal = function() {
+  document.getElementById('cvModalOverlay').classList.remove('open');
+};
+
+document.getElementById('cvModalOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeCVModal();
+});
+
+window.cvSwitchTab = function(tab) {
+  cvCurrentTab = tab;
+  document.getElementById('cvUploadTab').style.display = tab === 'upload' ? 'block' : 'none';
+  document.getElementById('cvManualTab').style.display = tab === 'manual' ? 'block' : 'none';
+  const tabUpload = document.getElementById('cvTabUpload');
+  const tabManual = document.getElementById('cvTabManual');
+  tabUpload.style.background = tab === 'upload' ? 'white' : 'transparent';
+  tabUpload.style.color = tab === 'upload' ? '#2563eb' : '#6b7280';
+  tabUpload.style.boxShadow = tab === 'upload' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
+  tabManual.style.background = tab === 'manual' ? 'white' : 'transparent';
+  tabManual.style.color = tab === 'manual' ? '#2563eb' : '#6b7280';
+  tabManual.style.boxShadow = tab === 'manual' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
+};
+
+// File upload handling
+const cvDrop = document.getElementById('cvDropZone');
+cvDrop.addEventListener('dragover', e => { e.preventDefault(); cvDrop.style.borderColor='#2563eb'; cvDrop.style.background='#eff6ff'; });
+cvDrop.addEventListener('dragleave', () => { cvDrop.style.borderColor='#e5e7eb'; cvDrop.style.background='#fafafa'; });
+cvDrop.addEventListener('drop', e => {
+  e.preventDefault(); cvDrop.style.borderColor='#e5e7eb'; cvDrop.style.background='#fafafa';
+  if (e.dataTransfer.files[0]) cvHandleFile(e.dataTransfer.files[0]);
+});
+document.getElementById('cvFileInput').addEventListener('change', e => {
+  if (e.target.files[0]) cvHandleFile(e.target.files[0]);
+  e.target.value = '';
+});
+
+async function cvHandleFile(file) {
+  const isAr = currentLang === 'ar';
+  const status = document.getElementById('cvFileStatus');
+  status.style.display = 'block';
+  status.textContent = isAr ? '⏳ جارٍ قراءة الملف...' : '⏳ Reading file...';
+
+  try {
+    let text = '';
+    if (file.name.endsWith('.pdf') || file.type === 'application/pdf') {
+      text = await extractPDFText(file);
+    } else if (file.name.endsWith('.docx') || file.type.includes('wordprocessingml')) {
+      text = await extractDOCXText(file);
+    } else if (file.name.endsWith('.doc')) {
+      text = await extractPlainText(file);
+    } else {
+      text = await extractPlainText(file);
+    }
+
+    if (!text || text.trim().length < 20) {
+      status.style.background = '#fef2f2';
+      status.style.borderColor = '#fecaca';
+      status.style.color = '#dc2626';
+      status.textContent = isAr ? '❌ لم يتم استخراج نص كافٍ — جرّب الإدخال اليدوي' : '❌ Could not extract enough text — try manual input';
+      return;
+    }
+
+    cvExtractedText = text;
+    status.style.background = '#f0fdf4';
+    status.style.borderColor = '#bbf7d0';
+    status.style.color = '#059669';
+    status.textContent = (isAr ? '✅ تم قراءة الملف: ' : '✅ File read: ') + file.name + (isAr ? ` (${text.length} حرف)` : ` (${text.length} chars)`);
+    document.getElementById('cvJobTargetGroup').style.display = 'block';
+  } catch(e) {
+    status.style.background = '#fef2f2';
+    status.style.color = '#dc2626';
+    status.textContent = (isAr ? '❌ خطأ في قراءة الملف: ' : '❌ Error reading file: ') + e.message;
+  }
+}
+
+async function extractPDFText(file) {
+  // Load PDF.js from CDN
+  if (!window.pdfjsLib) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  const ab = await file.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({ data: ab }).promise;
+  let text = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(item => item.str).join(' ') + '\n';
+  }
+  return text.trim();
+}
+
+async function extractDOCXText(file) {
+  if (!window.mammoth) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  const ab = await file.arrayBuffer();
+  const result = await window.mammoth.extractRawText({ arrayBuffer: ab });
+  return result.value.trim();
+}
+
+async function extractPlainText(file) {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload = e => res(e.target.result);
+    reader.onerror = rej;
+    reader.readAsText(file);
+  });
+}
+
+async function runCVTool() {
+  const isAr = currentLang === 'ar';
+  let prompt = '';
+
+  if (cvCurrentTab === 'upload') {
+    if (!cvExtractedText) {
+      alert(isAr ? 'يرجى رفع ملف أولاً أو التبديل للإدخال اليدوي' : 'Please upload a file first or switch to manual input');
+      return;
+    }
+    const jobTarget = document.getElementById('cvJobUpload').value.trim();
+    prompt = isAr
+      ? `أنت خبير في تحويل السير الذاتية لتنسيق ATS احترافي. محتوى السيرة الذاتية المرفوعة:\n\n${cvExtractedText}\n\n${jobTarget ? `المسمى الوظيفي المستهدف: ${jobTarget}\n\n` : ''}حوّل هذه السيرة الذاتية لتنسيق ATS محسّن باللغة العربية الفصحى.`
+      : `You are an expert ATS resume converter. Here is the uploaded resume content:\n\n${cvExtractedText}\n\n${jobTarget ? `Target job title: ${jobTarget}\n\n` : ''}Convert this resume to an ATS-optimized format in English.`;
+  } else {
+    const name = document.getElementById('cvName').value.trim();
+    if (!name) { alert(isAr ? 'يرجى إدخال الاسم الكامل' : 'Please enter your full name'); return; }
+    const job = document.getElementById('cvJob').value.trim();
+    const exp = document.getElementById('cvExp').value.trim();
+    const edu = document.getElementById('cvEdu').value.trim();
+    const phone = document.getElementById('cvPhone').value.trim();
+    const email = document.getElementById('cvEmailField').value.trim();
+    prompt = isAr
+      ? `أنت خبير في كتابة السير الذاتية المحسّنة لنظام ATS. اكتب سيرة ذاتية احترافية باللغة العربية الفصحى.\nالاسم: ${name}\nالمسمى: ${job||'(غير محدد)'}\nالخبرات: ${exp||'(غير محددة)'}\nالتعليم: ${edu||'(غير محدد)'}\nالهاتف: ${phone||'(لم يُذكر)'}\nالبريد: ${email||'(لم يُذكر)'}`
+      : `You are an expert ATS resume writer. Write a professional ATS-optimized resume in English.\nName: ${name}\nJob: ${job||'(not specified)'}\nExperience: ${exp||'(not specified)'}\nEducation: ${edu||'(not specified)'}\nPhone: ${phone||'(not provided)'}\nEmail: ${email||'(not provided)'}`;
+  }
+
+  // Add ATS instructions to prompt
+  const atsInstructions = isAr
+    ? `\n\nتعليمات ATS الصارمة:\nاستخدم هذه العناوين بالضبط:\n== بيانات التواصل ==\n== الملخص المهني ==\n== المهارات الأساسية ==\n== الخبرات العملية ==\n== التعليم ==\nكل نقطة في المهارات والخبرات تبدأ بـ "•"\nممنوع اختراع معلومات غير مذكورة\nممنوع أي placeholder أو تعليق بعد الانتهاء`
+    : `\n\nStrict ATS rules:\nUse exactly these headers:\n== CONTACT INFORMATION ==\n== PROFESSIONAL SUMMARY ==\n== CORE SKILLS ==\n== WORK EXPERIENCE ==\n== EDUCATION ==\nEach bullet point starts with "•"\nNever invent information not mentioned\nNo placeholders or trailing comments`;
+
+  prompt += atsInstructions;
+
+  document.getElementById('cvRunBtn').disabled = true;
+  document.getElementById('cvLoading').classList.add('visible');
+  document.getElementById('cvResultBox').style.display = 'none';
+
+  try {
+    const res = await fetch('https://wispy-pine-f125.mkaaameen.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'qwen/qwen3-32b',
+        temperature: 0.4,
+        reasoning_effort: 'none',
+        messages: [
+          { role: 'system', content: isAr
+            ? 'أنت كاتب سير ذاتية عربي محترف متخصص في تنسيق ATS. اكتب بالعربية الفصحى فقط. لا تخترع معلومات. لا تضف تعليقات أو أسئلة بعد الانتهاء.'
+            : 'You are a professional ATS resume writer. Write in clear English only. Never invent information. No trailing comments or questions.' },
+          { role: 'user', content: prompt }
+        ]
+      })
+    });
+    const data = await res.json();
+    let text = data.choices?.[0]?.message?.content || (isAr ? 'حدث خطأ' : 'An error occurred');
+
+    // Clean stray characters
+    text = text.replace(/[^\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFFa-zA-Z0-9\s.,،؛:!؟?\-()'"@\/%+#_\n•=]/g, '');
+    text = text.replace(/\n{3,}/g, '\n\n').trim();
+
+    cvResultContent = text;
+    document.getElementById('cvResultText').textContent = text;
+    document.getElementById('cvResultBox').style.display = 'block';
+  } catch(e) {
+    document.getElementById('cvResultText').textContent = isAr ? 'حدث خطأ في الاتصال' : 'Connection error';
+    document.getElementById('cvResultBox').style.display = 'block';
+  }
+
+  document.getElementById('cvLoading').classList.remove('visible');
+  document.getElementById('cvRunBtn').disabled = false;
+}
+
+window.cvCopyResult = function() {
+  navigator.clipboard.writeText(cvResultContent).then(() => {
+    const btn = document.getElementById('cvCopyBtn');
+    const orig = btn.textContent;
+    btn.textContent = currentLang === 'ar' ? '✓ تم النسخ' : '✓ Copied';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+};
+
+window.cvExportPDF = function() {
+  if (!cvResultContent) return;
+  const isAr = currentLang === 'ar';
+  const name = document.getElementById('cvName')?.value?.trim() || 'resume';
+  const dir = isAr ? 'rtl' : 'ltr';
+  const al = isAr ? 'right' : 'left';
+  const ff = isAr ? "'Tahoma','Arial Unicode MS','Arial',sans-serif" : "'Arial',sans-serif";
+  let rows = '';
+  let firstContent = true;
+  cvResultContent.split('\n').forEach(line => {
+    const t = line.trim();
+    if (!t) { rows += '<div style="height:5pt"></div>'; return; }
+    if (firstContent) { firstContent=false; rows += `<div style="font-size:18pt;font-weight:bold;color:#1e3a8a;margin-bottom:6pt;font-family:${ff}">${t}</div>`; return; }
+    if (isHeadingLine(t)) { rows += `<div style="font-size:12pt;font-weight:bold;color:#1d4ed8;border-bottom:2pt solid #1d4ed8;margin-top:13pt;margin-bottom:5pt;padding-bottom:2pt;font-family:${ff}">${cleanHead(t)}</div>`; return; }
+    if (isBulletLine(t)) { rows += `<div style="padding-${al}:14pt;margin-bottom:3pt;font-size:10.5pt;font-family:${ff}">• ${cleanBull(t)}</div>`; return; }
+    rows += `<div style="font-size:10.5pt;margin-bottom:3pt;font-family:${ff}">${t}</div>`;
+  });
+  const html = `<!DOCTYPE html><html lang="${isAr?'ar':'en'}" dir="${dir}"><head><meta charset="UTF-8"><title>${name}</title><style>@page{margin:16mm 18mm;size:A4}*{margin:0;padding:0;box-sizing:border-box}body{font-family:${ff};font-size:10.5pt;color:#1a1a1a;line-height:1.55;direction:${dir};text-align:${al};-webkit-print-color-adjust:exact;print-color-adjust:exact}</style></head><body>${rows}</body></html>`;
+  const win = window.open('','_blank');
+  if (!win) { const f=document.createElement('iframe'); f.style.cssText='position:fixed;width:0;height:0;border:0;visibility:hidden'; document.body.appendChild(f); f.contentDocument.write(html); f.contentDocument.close(); setTimeout(()=>{f.contentWindow.print();setTimeout(()=>document.body.removeChild(f),2000)},500); return; }
+  win.document.write(html); win.document.close(); setTimeout(()=>win.print(),500);
+};
+
+window.cvExportDOCX = async function() {
+  if (!cvResultContent) return;
+  const btn = document.querySelector('#cvResultBox .btn-docx');
+  if (btn) { btn.disabled=true; btn.innerHTML='⏳'; }
+  const isAr = currentLang === 'ar';
+  const name = document.getElementById('cvName')?.value?.trim() || 'resume';
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  const jc=isAr?'right':'left', bidi=isAr?'<w:bidi/>':'';
+  let bodyXml='', firstContent=true;
+  cvResultContent.split('\n').forEach(line=>{
+    const t=line.trim();
+    if(!t){bodyXml+=`<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="60"/></w:pPr></w:p>`;return;}
+    if(firstContent){firstContent=false;const c=esc(t);bodyXml+=`<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="80"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1e3a8a"/><w:sz w:val="40"/></w:rPr><w:t>${c}</w:t></w:r></w:p>`;return;}
+    if(isHeadingLine(t)){const h=esc(cleanHead(t));bodyXml+=`<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:before="280" w:after="80"/><w:pBdr><w:bottom w:val="single" w:sz="8" w:space="1" w:color="1d4ed8"/></w:pBdr></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1d4ed8"/><w:sz w:val="24"/></w:rPr><w:t>${h}</w:t></w:r></w:p>`;return;}
+    if(isBulletLine(t)){const c=esc(cleanBull(t));const ind=isAr?`w:right="360"`:`w:left="360"`;bodyXml+=`<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="50"/><w:ind ${ind}/></w:pPr><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t xml:space="preserve">• ${c}</w:t></w:r></w:p>`;return;}
+    const c=esc(t);bodyXml+=`<w:p><w:pPr><w:jc w:val="${jc}"/>${bidi}<w:spacing w:after="50"/></w:pPr><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t>${c}</w:t></w:r></w:p>`;
+  });
+  const docXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${bodyXml}<w:sectPr><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr></w:body></w:document>`;
+  const relsXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
+  const ctXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>`;
+  const wordRels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"></Relationships>`;
+  try{
+    if(!window.JSZip)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+    const zip=new window.JSZip();
+    zip.file('[Content_Types].xml',ctXml);zip.file('_rels/.rels',relsXml);zip.file('word/document.xml',docXml);zip.file('word/_rels/document.xml.rels',wordRels);
+    const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${name.replace(/\s+/g,'_')}_ATS.docx`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  }catch(e){alert('Export error: '+e.message);}
+  if(btn){btn.disabled=false;btn.innerHTML='📝 Word';}
+};
+</script>
 </body>
 </html>
