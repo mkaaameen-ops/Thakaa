@@ -1498,7 +1498,60 @@ setLang(detectLang());
       <!-- Config -->
       <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin-bottom:14px">
 
-        <!-- Background color -->
+        <!-- Country / Document Size Selector -->
+        <div style="margin-bottom:14px">
+          <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">🌍 Country & Document Size</div>
+          <select id="photoSizePreset" onchange="photoApplyPreset()" style="width:100%;font-family:'Cairo',Inter,sans-serif;font-size:13px;border:1.5px solid #e5e7eb;border-radius:10px;padding:10px 12px;background:white;color:#111;outline:none;cursor:pointer">
+            <optgroup label="🇸🇦 الخليج العربي">
+              <option value="600,600,white" selected>🇸🇦 السعودية — جواز السفر (600×600)</option>
+              <option value="600,600,white">🇦🇪 الإمارات — جواز السفر (430×550 → 600×600)</option>
+              <option value="413,531,white">🇰🇼 الكويت — جواز السفر 35×45mm</option>
+              <option value="413,531,white">🇶🇦 قطر — جواز السفر 35×45mm</option>
+              <option value="413,531,white">🇧🇭 البحرين — جواز السفر 35×45mm</option>
+              <option value="413,531,white">🇴🇲 عُمان — جواز السفر 35×45mm</option>
+              <option value="413,531,white">🇯🇴 الأردن — جواز السفر 35×45mm</option>
+              <option value="413,531,white">🇪🇬 مصر — جواز السفر 35×45mm</option>
+            </optgroup>
+            <optgroup label="🌎 أمريكا الشمالية">
+              <option value="600,600,white">🇺🇸 USA — Passport 2×2in (600×600px)</option>
+              <option value="600,600,white">🇺🇸 USA — Green Card / Visa 2×2in</option>
+              <option value="590,826,white">🇨🇦 Canada — Passport 50×70mm (590×826px)</option>
+            </optgroup>
+            <optgroup label="🌍 أوروبا / Schengen">
+              <option value="413,531,#e8e8e8">🇬🇧 UK — Passport 35×45mm (grey bg)</option>
+              <option value="413,531,#c8c8c8">🇩🇪 Germany — Passport 35×45mm (light grey)</option>
+              <option value="413,531,#d0d0d0">🇫🇷 France — Passport 35×45mm (light grey)</option>
+              <option value="413,531,white">🇮🇹 Italy — Passport 35×45mm</option>
+              <option value="413,531,white">🇪🇸 Spain — DNI/Passport 35×45mm</option>
+              <option value="413,531,white">🇳🇱 Netherlands — Passport 35×45mm</option>
+              <option value="413,531,white">🇸🇪 Sweden — Passport 35×45mm</option>
+              <option value="413,531,white">Schengen Visa — 35×45mm</option>
+            </optgroup>
+            <optgroup label="🌏 آسيا / Asia">
+              <option value="413,531,white">🇯🇵 Japan — Passport 35×45mm</option>
+              <option value="413,531,white">🇰🇷 South Korea — Passport 35×45mm</option>
+              <option value="390,567,white">🇨🇳 China — Passport 33×48mm (390×567px)</option>
+              <option value="600,600,white">🇮🇳 India — Passport 51×51mm (600×600px)</option>
+              <option value="413,531,white">🇦🇺 Australia — Passport 35×45mm</option>
+              <option value="413,531,white">🇲🇾 Malaysia — Passport 35×45mm</option>
+              <option value="413,531,white">🇵🇰 Pakistan — Passport 35×45mm</option>
+            </optgroup>
+            <optgroup label="🚗 رخصة القيادة / Driving License">
+              <option value="600,600,white">🚗 رخصة قيادة عامة (مربعة)</option>
+              <option value="413,531,white">🚗 رخصة قيادة دولية 35×45mm</option>
+              <option value="300,400,white">🚗 رخصة قيادة — ID صغير 300×400px</option>
+            </optgroup>
+            <optgroup label="📐 مخصص / Custom">
+              <option value="413,531,white">35×45mm — المعيار الدولي ICAO</option>
+              <option value="600,600,white">600×600px — مربع</option>
+              <option value="590,826,white">590×826px — مستطيل كبير</option>
+              <option value="0,0,white">📐 الحجم الأصلي للصورة</option>
+            </optgroup>
+          </select>
+          <div id="photoSizeInfo" style="font-size:11px;color:#6b7280;margin-top:6px;padding:6px 10px;background:#f0f4f8;border-radius:8px">
+            📐 600×600px · خلفية بيضاء · مناسب لجوازات الخليج والولايات المتحدة والهند
+          </div>
+        </div>
         <div style="margin-bottom:12px">
           <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">🎨 Background Color</div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -1548,7 +1601,7 @@ setLang(detectLang());
       <!-- Actions -->
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button onclick="photoDownload('full')" id="photoDlFull" disabled style="flex:1;padding:11px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;opacity:0.4">⬇ Full Res</button>
-        <button onclick="photoDownload('passport')" id="photoDlPassport" disabled style="flex:1;padding:11px;background:#059669;color:white;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;opacity:0.4">⬇ 600×600</button>
+        <button onclick="photoDownload('passport')" id="photoDlPassport" disabled style="flex:1;padding:11px;background:#059669;color:white;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;opacity:0.4">⬇ <span id="photoDlPassportLabel">600×600</span></button>
         <button onclick="photoDownload('sheet')" id="photoDlSheet" disabled style="flex:1;padding:11px;background:#7c3aed;color:white;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;opacity:0.4">🖨 Print Sheet</button>
         <button onclick="photoReset()" style="padding:11px 16px;background:#f3f4f6;color:#374151;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer">🔄</button>
       </div>
@@ -1577,6 +1630,47 @@ let photoOrigFile = null;
 let photoPassportBlob = null;
 let photoFullBlob = null;
 let photoSheetBlob = null;
+let photoOutputW = 600;
+let photoOutputH = 600;
+
+// Size presets info labels
+const PHOTO_SIZE_INFO = {
+  '600,600,white':    '📐 600×600px · خلفية بيضاء · USA / السعودية / الهند / الإمارات',
+  '413,531,white':    '📐 413×531px (35×45mm) · المعيار الدولي ICAO · UK / أوروبا / الخليج / أستراليا / اليابان',
+  '413,531,#e8e8e8': '📐 413×531px (35×45mm) · خلفية رمادية فاتحة · المملكة المتحدة UK',
+  '413,531,#c8c8c8': '📐 413×531px (35×45mm) · خلفية رمادية · ألمانيا Germany',
+  '413,531,#d0d0d0': '📐 413×531px (35×45mm) · خلفية رمادية فاتحة · فرنسا France',
+  '590,826,white':    '📐 590×826px (50×70mm) · كندا Canada · أكبر مقاس قياسي',
+  '390,567,white':    '📐 390×567px (33×48mm) · الصين China · مقاس خاص',
+  '300,400,white':    '📐 300×400px · رخصة قيادة صغيرة',
+  '0,0,white':        '📐 الحجم الأصلي للصورة بدون تغيير',
+};
+
+window.photoApplyPreset = function() {
+  const sel = document.getElementById('photoSizePreset');
+  const val = sel.value;
+  const parts = val.split(',');
+  photoOutputW = parseInt(parts[0]) || 600;
+  photoOutputH = parseInt(parts[1]) || 600;
+  const bgColor = parts.slice(2).join(',');
+
+  // Set background color from preset
+  photoBgColor = bgColor === 'white' ? '#FFFFFF' : bgColor;
+  document.querySelectorAll('.photo-swatch').forEach(s => s.classList.remove('active'));
+  const matchSwatch = document.querySelector(`.photo-swatch[data-c="${photoBgColor}"]`);
+  if (matchSwatch) matchSwatch.classList.add('active');
+
+  // Update info label
+  const infoEl = document.getElementById('photoSizeInfo');
+  if (infoEl) infoEl.textContent = PHOTO_SIZE_INFO[val] || `📐 ${photoOutputW}×${photoOutputH}px`;
+
+  // Update download button label
+  const dlLabel = document.getElementById('photoDlPassportLabel');
+  if (dlLabel) dlLabel.textContent = `${photoOutputW > 0 ? photoOutputW : 'orig'}×${photoOutputH > 0 ? photoOutputH : 'orig'}`;
+
+  // Re-render if result exists
+  if (photoTransparentBlob) photoUpdateComposite();
+};
 
 window.openPhotoModal = function() {
   document.getElementById('photoModalOverlay').classList.add('open');
@@ -1686,15 +1780,36 @@ function photoGenPassport(blob, bg, zoom, offsetY) {
     const img = new Image();
     img.onload = () => {
       const c = document.createElement('canvas');
-      c.width = c.height = 600;
+      // Use dynamic output dimensions from preset
+      const outW = photoOutputW > 0 ? photoOutputW : img.width;
+      const outH = photoOutputH > 0 ? photoOutputH : img.height;
+      c.width = outW;
+      c.height = outH;
       const ctx = c.getContext('2d');
+
+      // Fill background
       ctx.fillStyle = bg;
-      ctx.fillRect(0,0,600,600);
-      const minSize = Math.min(img.width, img.height);
-      const srcCrop = minSize / (zoom/100);
-      const sx = (img.width - srcCrop) / 2;
-      const sy = ((img.height - srcCrop) / 2) + (offsetY * (img.height/600));
-      ctx.drawImage(img, sx, sy, srcCrop, srcCrop, 0, 0, 600, 600);
+      ctx.fillRect(0, 0, outW, outH);
+
+      // For square output: crop square from center
+      // For non-square output: fit proportionally with centering
+      if (outW === outH) {
+        // Square — classic passport crop
+        const minSize = Math.min(img.width, img.height);
+        const srcCrop = minSize / (zoom / 100);
+        const sx = (img.width - srcCrop) / 2;
+        const sy = ((img.height - srcCrop) / 2) + (offsetY * (img.height / outH));
+        ctx.drawImage(img, sx, sy, srcCrop, srcCrop, 0, 0, outW, outH);
+      } else {
+        // Non-square (e.g. 35×45mm) — fit with zoom & offset
+        const aspect = outW / outH;
+        const srcH = img.height / (zoom / 100);
+        const srcW = srcH * aspect;
+        const sx = (img.width - srcW) / 2;
+        const sy = ((img.height - srcH) / 2) + (offsetY * (img.height / outH));
+        ctx.drawImage(img, sx, sy, srcW, srcH, 0, 0, outW, outH);
+      }
+
       URL.revokeObjectURL(url);
       res(c);
     };
@@ -1725,20 +1840,65 @@ function photoGenFull(blob, bg) {
 function photoGenSheet(passCanvas) {
   return new Promise(res => {
     const sheet = document.createElement('canvas');
-    sheet.width = 1800; sheet.height = 1200;
+    const pW = passCanvas.width;
+    const pH = passCanvas.height;
+
+    // Auto-arrange based on photo dimensions
+    // Target: fit on A6 (4×6") = 1800×1200px at 300dpi
+    const sheetW = 1800, sheetH = 1200;
+    const margin = 60;
+    const gap = 20;
+
+    // Calculate how many fit per row and column
+    const availW = sheetW - margin * 2;
+    const availH = sheetH - margin * 2;
+    const cols = Math.floor((availW + gap) / (pW + gap));
+    const rows = Math.floor((availH + gap) / (pH + gap));
+    const count = Math.min(cols * rows, 8); // max 8 photos
+
+    // Scale down if photo is too large
+    const scaleX = availW / (pW * Math.min(cols, 3) + gap * (Math.min(cols, 3) - 1));
+    const scaleY = availH / (pH * Math.min(rows, 2) + gap * (Math.min(rows, 2) - 1));
+    const scale = Math.min(scaleX, scaleY, 1);
+    const itemW = Math.round(pW * scale);
+    const itemH = Math.round(pH * scale);
+    const actualCols = Math.min(Math.floor((availW + gap) / (itemW + gap)), 4);
+    const actualRows = Math.min(Math.floor((availH + gap) / (itemH + gap)), 3);
+
+    sheet.width = sheetW;
+    sheet.height = sheetH;
     const ctx = sheet.getContext('2d');
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0,0,1800,1200);
-    const cols=3, rows=2, iW=500, iH=500, startX=100, startY=80, gX=60, gY=40;
-    for (let r=0; r<rows; r++) {
-      for (let c=0; c<cols; c++) {
-        const x = startX + c*(iW+gX);
-        const y = startY + r*(iH+gY);
-        ctx.drawImage(passCanvas, x, y, iW, iH);
-        ctx.strokeStyle='#ddd'; ctx.lineWidth=1.5;
-        ctx.strokeRect(x, y, iW, iH);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, sheetW, sheetH);
+
+    // Center the grid
+    const gridW = actualCols * itemW + (actualCols - 1) * gap;
+    const gridH = actualRows * itemH + (actualRows - 1) * gap;
+    const startX = Math.round((sheetW - gridW) / 2);
+    const startY = Math.round((sheetH - gridH) / 2);
+
+    for (let r = 0; r < actualRows; r++) {
+      for (let c = 0; c < actualCols; c++) {
+        const x = startX + c * (itemW + gap);
+        const y = startY + r * (itemH + gap);
+        ctx.drawImage(passCanvas, x, y, itemW, itemH);
+        // Thin guide cut line
+        ctx.strokeStyle = '#cccccc';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(x, y, itemW, itemH);
+        ctx.setLineDash([]);
       }
     }
+
+    // Label bottom
+    ctx.fillStyle = '#999';
+    ctx.font = '22px Inter, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    const preset = document.getElementById('photoSizePreset');
+    const label = preset ? preset.options[preset.selectedIndex].text : 'Passport Photo';
+    ctx.fillText(`${label} · ${pW}×${pH}px · ${actualCols}×${actualRows} photos`, sheetW/2, sheetH - 20);
+
     res(sheet);
   });
 }
@@ -1779,7 +1939,15 @@ window.photoSetCustomBg = function(color) {
 };
 
 window.photoDownload = function(type) {
-  const map = { full: [photoFullBlob,'id_photo_full.png'], passport: [photoPassportBlob,'passport_600x600.png'], sheet: [photoSheetBlob,'passport_print_4x6.png'] };
+  const preset = document.getElementById('photoSizePreset');
+  const label = preset ? preset.options[preset.selectedIndex].text
+    .replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g,'').trim().replace(/\s+/g,'_').slice(0,30)
+    : 'passport';
+  const map = {
+    full:     [photoFullBlob,     `id_photo_full.png`],
+    passport: [photoPassportBlob, `photo_${photoOutputW}x${photoOutputH}_${label}.png`],
+    sheet:    [photoSheetBlob,    `print_sheet_${label}.png`]
+  };
   const [blob, name] = map[type] || [];
   if (!blob) return;
   const url = URL.createObjectURL(blob);
@@ -1793,12 +1961,19 @@ window.photoDownload = function(type) {
 window.photoReset = function() {
   photoOrigFile = null; photoTransparentBlob = null;
   photoPassportBlob = null; photoFullBlob = null; photoSheetBlob = null;
+  photoOutputW = 600; photoOutputH = 600;
   document.getElementById('photoOrigWrap').innerHTML = '<span style="font-size:12px;color:#9ca3af">No image</span>';
   document.getElementById('photoResultWrap').innerHTML = '<span style="font-size:12px;color:#9ca3af">Processed</span>';
   document.getElementById('photoZoom').value = 100;
   document.getElementById('photoOffset').value = 0;
   document.getElementById('photoZoomVal').textContent = '100%';
   document.getElementById('photoOffsetVal').textContent = '0px';
+  const dlLabel = document.getElementById('photoDlPassportLabel');
+  if (dlLabel) dlLabel.textContent = '600×600';
+  const preset = document.getElementById('photoSizePreset');
+  if (preset) preset.selectedIndex = 0;
+  const infoEl = document.getElementById('photoSizeInfo');
+  if (infoEl) infoEl.textContent = '📐 600×600px · خلفية بيضاء · مناسب لجوازات الخليج والولايات المتحدة والهند';
   setPhotoDlState(false);
   photoSetStatus('Upload a photo to begin.', 'blue');
 };
